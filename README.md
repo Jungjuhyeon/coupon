@@ -13,6 +13,9 @@
 6. 쿠폰은 이벤트 기간 종료 후 특정 기간 동안만 사용 가능합니다.
     * 예시: 이벤트 기간 종료 후 50% 할인 쿠폰은 1달 이내에 사용되어야 합니다
 
+# ERD
+ <img width="1266" alt="image" src="https://github.com/user-attachments/assets/f8c1cf7f-435e-4310-b33e-88464e2999c2" />
+
 ## Commit Convention
 
 - feat : 새로운 기능 추가  
