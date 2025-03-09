@@ -5,6 +5,7 @@ import com.personal_project.coupon.member.applicaion.usecase.AuthMember;
 import com.personal_project.coupon.member.domain.Member;
 import com.personal_project.coupon.member.framwork.web.request.MemberInfoDTO;
 import com.personal_project.coupon.member.framwork.web.request.MemberLoginDTO;
+import com.personal_project.coupon.member.framwork.web.response.MemberLoginOutputDTO;
 import com.personal_project.coupon.member.framwork.web.response.MemberOutPutDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,9 +28,9 @@ public class MemberController {
     }
 
     @PostMapping("login")
-    public SuccessResponse<MemberOutPutDTO> login(@Valid @RequestBody MemberLoginDTO request){
-        Member member = authMember.login(request);
-        return SuccessResponse.success(MemberOutPutDTO.mapToDTO(member));
+    public SuccessResponse<MemberLoginOutputDTO> login(@Valid @RequestBody MemberLoginDTO request){
+        MemberLoginOutputDTO response = authMember.login(request);
+        return SuccessResponse.success(response);
     }
 
 }

@@ -3,11 +3,13 @@ package com.personal_project.coupon.member.applicaion.inputport;
 
 import com.personal_project.coupon.global.exception.BusinessException;
 import com.personal_project.coupon.global.exception.errorcode.CommonErrorCode;
+import com.personal_project.coupon.global.util.jwt.JwtUtil;
 import com.personal_project.coupon.member.applicaion.outputport.MemberOutputPort;
 import com.personal_project.coupon.member.applicaion.usecase.AuthMember;
 import com.personal_project.coupon.member.domain.Member;
 import com.personal_project.coupon.member.framwork.web.request.MemberInfoDTO;
 import com.personal_project.coupon.member.framwork.web.request.MemberLoginDTO;
+import com.personal_project.coupon.member.framwork.web.response.MemberLoginOutputDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthInputPort implements AuthMember {
     private final MemberOutputPort memberOutputPort;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
     @Override
     @Transactional
@@ -36,14 +39,15 @@ public class AuthInputPort implements AuthMember {
 
     }
     @Override
-    public Member login(MemberLoginDTO request){
+    public MemberLoginOutputDTO login(MemberLoginDTO request){
 
         Member member = memberOutputPort.findByEmail(request.getEmail()).orElseThrow(()-> new BusinessException(CommonErrorCode.USER_EMAIL_NOT_FOUND));
         //비밀번호 체크
         if(!passwordEncoder.matches(request.getPassword(),member.getPassword())){
             throw new BusinessException(CommonErrorCode.USER_PASSWORD_MISMATCH);
         }
-        return member;
+        String accessToken = jwtUtil.createAccessToken(member.getId(),member.getRole().name());
+        return MemberLoginOutputDTO.mapToDTO(member,accessToken);
     }
 
 
