@@ -32,4 +32,14 @@ public class Event extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private EventStatus eventStatus; //시작전, 시작, 마감
+
+    public boolean isEventActive(LocalDateTime nowTime){
+        if (nowTime.isBefore(startDate) || nowTime.isAfter(endDate)) {
+            return false; // 이벤트 기간이 아닐 경우 비활성화
+        }
+        // 하루 중 특정 시간대 검사
+        LocalTime nowTimeOnly = nowTime.toLocalTime();
+        return nowTimeOnly.isAfter(dailyStartDate) && nowTimeOnly.isBefore(dailyEndDate);
+
+    }
 }

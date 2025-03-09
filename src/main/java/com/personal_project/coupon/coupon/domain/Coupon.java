@@ -32,6 +32,8 @@ public class Coupon extends BaseEntity {
 
     private Integer maxQuantity;
 
+    private Integer issuedQuantity;
+
     private LocalDateTime startTime; //쿠폰 발행 시작 시간
 
     private LocalDateTime endTime; //쿠폰 발행 종료 시간
@@ -43,4 +45,15 @@ public class Coupon extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private CouponStatus Couponstatus; //발급전 , 발급됨
 
+    public boolean isIssuable(LocalDateTime nowTime) {
+        return (nowTime.isAfter(event.getStartDate()) && nowTime.isBefore(event.getEndDate()));
+    }
+
+    public boolean isQuantity() {
+        return issuedQuantity < maxQuantity;
+    }
+
+    public void increaseStock() {
+        issuedQuantity++;
+    }
 }

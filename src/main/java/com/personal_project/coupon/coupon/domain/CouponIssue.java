@@ -31,7 +31,15 @@ public class CouponIssue extends BaseEntity {
     private LocalDateTime issuedAt; //발급시간
 
     @Enumerated(EnumType.STRING)
-    private CouponIssueStatus CouponIssueStatus;     //발급됨, 사용됨
+    private CouponIssueStatus couponIssueStatus;     //발급됨, 사용됨
 
+    public static CouponIssue create(Member member,Coupon coupon, LocalDateTime now){
+        return CouponIssue.builder()
+                .member(member)
+                .coupon(coupon)
+                .issuedAt(now)
+                .couponIssueStatus(CouponIssueStatus.ISSUED)
+                .build();
+    }
 
 }

@@ -29,7 +29,19 @@ public enum CommonErrorCode implements ErrorCode{
     USER_PASSWORD_MISMATCH(HttpStatus.UNAUTHORIZED, "4003", "비밀번호가 일치하지 않습니다."),
     LOGOUT_MEMBER(HttpStatus.FORBIDDEN, "3001", "로그아웃된 사용자입니다.(재 로그인 하세요."),
 
+
+    //event error(4101 ~ 4200)
+    EVENT_NOT_FOUND(HttpStatus.NOT_FOUND,"4101","해당 이벤트를 찾을 수 없습니다."),
+    EVENT_NOT_ACTIVE(HttpStatus.NOT_FOUND,"4102","이벤트 기간이 아닙니다."),
+
+    //coupon error(4201 ~ 4300)
+    COUPON_NOT_FOUND(HttpStatus.NOT_FOUND,"4201","해당 쿠폰를 찾을 수 없습니다."),
+    COUPON_NOT_ACTIVE(HttpStatus.NOT_FOUND,"4202","쿠폰 발급 기간이 아닙니다."),
+    COUPON_OUT_OF_STOCK(HttpStatus.NOT_FOUND,"4203", "쿠폰 재고가 부족합니다."),
+    COUPON_ALREADY_ISSUED(HttpStatus.BAD_REQUEST, "4204", "이미 쿠폰을 발급받았습니다.");
     ;
+
+
 
     private final HttpStatus httpStatus;
     private final String code;
