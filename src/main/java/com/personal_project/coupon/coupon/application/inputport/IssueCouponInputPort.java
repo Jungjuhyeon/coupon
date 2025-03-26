@@ -15,7 +15,7 @@ public class IssueCouponInputPort implements IssueCoupon {
     private final CouponIssueFacade couponIssueFacade;
 
     @Autowired
-    public IssueCouponInputPort(@Qualifier("pessimisticLockCouponIssue") CouponIssueFacade couponIssueFacade) {
+    public IssueCouponInputPort(@Qualifier("redissonLockCouponIssue") CouponIssueFacade couponIssueFacade) {
         this.couponIssueFacade = couponIssueFacade;
     }
 
