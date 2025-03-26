@@ -12,9 +12,30 @@ import java.util.Optional;
 public class CouponAdapter implements CouponOutPort {
 
     private final CouponRepository couponRepository;
+    private final LockJpaRepository lockJpaRepository;
     @Override
     public Optional<Coupon> findById(Long couponId){
         return couponRepository.findById(couponId);
+    }
+
+    @Override
+    public void save(Coupon coupon){
+        couponRepository.save(coupon);
+    }
+
+    @Override
+    public Optional<Coupon> findByIdWithLock(Long couponId){
+        return couponRepository.findByIdWithLock(couponId);
+    }
+
+    @Override
+    public void getLock(String key){
+        lockJpaRepository.getLock(key);
+    }
+
+    @Override
+    public void releaseLock(String key){
+        lockJpaRepository.releaseLock(key);
     }
 
 }

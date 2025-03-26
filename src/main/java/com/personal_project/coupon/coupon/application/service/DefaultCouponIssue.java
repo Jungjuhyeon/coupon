@@ -3,7 +3,6 @@ package com.personal_project.coupon.coupon.application.service;
 import com.personal_project.coupon.coupon.application.outputport.CouponIssueOutPort;
 import com.personal_project.coupon.coupon.application.outputport.CouponOutPort;
 import com.personal_project.coupon.coupon.application.outputport.EventOutport;
-import com.personal_project.coupon.coupon.application.usercase.CouponIssueFacade;
 import com.personal_project.coupon.coupon.domain.Coupon;
 import com.personal_project.coupon.coupon.domain.CouponIssue;
 import com.personal_project.coupon.coupon.domain.Event;
@@ -21,14 +20,13 @@ import java.time.LocalDateTime;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class PessimisticLockCouponIssue implements CouponIssueFacade {
+public class DefaultCouponIssue {
 
     private final MemberOutputPort memberOutputPort;
     private final EventOutport eventOutport;
     private final CouponOutPort couponOutPort;
     private final CouponIssueOutPort couponIssueOutPort;
 
-    @Override
     @Transactional
     public void issueCoupon(Long eventId, Long couponId, Long memberId){
         //유저 조회
@@ -45,9 +43,8 @@ public class PessimisticLockCouponIssue implements CouponIssueFacade {
             throw new BusinessException(CommonErrorCode.EVENT_NOT_ACTIVE);
         }
 
-        // 배타 락으로 쿠폰 조회
-        Coupon coupon = couponOutPort.findByIdWithLock(couponId)
-                .orElseThrow(() -> new BusinessException(CommonErrorCode.COUPON_NOT_FOUND));
+        //쿠폰 조회
+        Coupon coupon = couponOutPort.findById(couponId).orElseThrow(()-> new BusinessException(CommonErrorCode.COUPON_NOT_FOUND));
 
         //해당 쿠폰 발급 가능 기간 체크
         if(!coupon.isIssuable(now)){
@@ -72,5 +69,4 @@ public class PessimisticLockCouponIssue implements CouponIssueFacade {
         //재고 증가
         coupon.increaseStock();
     }
-
 }
