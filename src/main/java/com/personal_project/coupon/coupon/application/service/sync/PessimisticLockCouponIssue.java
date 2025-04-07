@@ -1,12 +1,12 @@
-package com.personal_project.coupon.coupon.application.service;
+package com.personal_project.coupon.coupon.application.service.sync;
 
 import com.personal_project.coupon.coupon.application.outputport.CouponIssueOutPort;
 import com.personal_project.coupon.coupon.application.outputport.CouponOutPort;
 import com.personal_project.coupon.coupon.application.outputport.EventOutport;
-import com.personal_project.coupon.coupon.application.usercase.CouponIssueFacade;
-import com.personal_project.coupon.coupon.domain.Coupon;
-import com.personal_project.coupon.coupon.domain.CouponIssue;
-import com.personal_project.coupon.coupon.domain.Event;
+import com.personal_project.coupon.coupon.application.usecase.CouponIssueFacade;
+import com.personal_project.coupon.coupon.domain.entity.Coupon;
+import com.personal_project.coupon.coupon.domain.entity.CouponIssue;
+import com.personal_project.coupon.coupon.domain.entity.Event;
 import com.personal_project.coupon.global.exception.BusinessException;
 import com.personal_project.coupon.global.exception.errorcode.CommonErrorCode;
 import com.personal_project.coupon.member.applicaion.outputport.MemberOutputPort;
@@ -40,10 +40,10 @@ public class PessimisticLockCouponIssue implements CouponIssueFacade {
         LocalDateTime now = LocalDateTime.now();
         System.out.println(now);
 
-        // 이벤트 기간 및 발급 가능 시간 체크
-        if(!event.isEventActive(now)){
-            throw new BusinessException(CommonErrorCode.EVENT_NOT_ACTIVE);
-        }
+//        // 이벤트 기간 및 발급 가능 시간 체크
+//        if(!event.isEventActive(now)){
+//            throw new BusinessException(CommonErrorCode.EVENT_NOT_ACTIVE);
+//        }
 
         // 배타 락으로 쿠폰 조회
         Coupon coupon = couponOutPort.findByIdWithLock(couponId)

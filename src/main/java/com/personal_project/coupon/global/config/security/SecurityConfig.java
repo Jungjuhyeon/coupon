@@ -36,8 +36,8 @@ public class SecurityConfig{
                 .cors(Customizer.withDefaults()) // CORS
                 .formLogin(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/v1/members/**").permitAll()
-                        .requestMatchers("**").permitAll()
+//                        .requestMatchers("/api/v1/members/**").permitAll()
+                        .requestMatchers("/**").permitAll()
                         .anyRequest().authenticated())
 
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
