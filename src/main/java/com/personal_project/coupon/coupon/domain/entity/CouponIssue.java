@@ -1,4 +1,4 @@
-package com.personal_project.coupon.coupon.domain;
+package com.personal_project.coupon.coupon.domain.entity;
 
 import com.personal_project.coupon.coupon.domain.enumeration.CouponIssueStatus;
 import com.personal_project.coupon.global.entity.BaseEntity;
