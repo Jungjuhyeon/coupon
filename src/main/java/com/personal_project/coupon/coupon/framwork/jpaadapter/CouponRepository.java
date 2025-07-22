@@ -1,6 +1,6 @@
 package com.personal_project.coupon.coupon.framwork.jpaadapter;
 
-import com.personal_project.coupon.coupon.domain.Coupon;
+import com.personal_project.coupon.coupon.domain.entity.Coupon;
 import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
@@ -15,5 +15,5 @@ public interface CouponRepository extends JpaRepository<Coupon,Long> {
     @Query("SELECT c FROM Coupon c WHERE c.id = :couponId")
     Optional<Coupon> findByIdWithLock(@Param("couponId") Long couponId);
 
-    Optional<Coupon> findById(Long couponId);
+
 }

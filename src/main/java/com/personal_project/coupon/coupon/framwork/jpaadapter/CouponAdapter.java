@@ -1,7 +1,7 @@
 package com.personal_project.coupon.coupon.framwork.jpaadapter;
 
 import com.personal_project.coupon.coupon.application.outputport.CouponOutPort;
-import com.personal_project.coupon.coupon.domain.Coupon;
+import com.personal_project.coupon.coupon.domain.entity.Coupon;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -19,14 +19,15 @@ public class CouponAdapter implements CouponOutPort {
     }
 
     @Override
-    public void save(Coupon coupon){
-        couponRepository.save(coupon);
+    public Coupon save(Coupon coupon){
+        return couponRepository.save(coupon);
     }
 
     @Override
     public Optional<Coupon> findByIdWithLock(Long couponId){
         return couponRepository.findByIdWithLock(couponId);
     }
+
 
     @Override
     public void getLock(String key){

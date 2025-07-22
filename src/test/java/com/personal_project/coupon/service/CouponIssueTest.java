@@ -1,8 +1,9 @@
 package com.personal_project.coupon.service;
 
 
-import com.personal_project.coupon.coupon.application.usercase.IssueCoupon;
-import com.personal_project.coupon.coupon.domain.Coupon;
+import com.personal_project.coupon.coupon.application.service.sync.RedissonCouponIssueService;
+import com.personal_project.coupon.coupon.application.usecase.IssueCouponUsecase;
+import com.personal_project.coupon.coupon.domain.entity.Coupon;
 import com.personal_project.coupon.coupon.framwork.jpaadapter.CouponAdapter;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +22,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 public class CouponIssueTest {
     @Autowired
-    private IssueCoupon issueCoupon;
+    private IssueCouponUsecase issueCoupon;
 
     @Autowired
     private CouponAdapter couponAdapter;
-
 
     @Test
     void 동시에_1000개_요청() throws Exception {
@@ -40,7 +40,6 @@ public class CouponIssueTest {
             executorService.submit(() -> {
                 try {
                     issueCoupon.issue(eventId, couponId, currentMemberId);
-
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 } finally {
@@ -56,7 +55,6 @@ public class CouponIssueTest {
         Optional<Coupon> coupon = couponAdapter.findById(1L);
 
 
-        // 500 - 100 == 400
         assertThat(coupon.get().getIssuedQuantity()).isEqualTo(1000);
     }
 }
