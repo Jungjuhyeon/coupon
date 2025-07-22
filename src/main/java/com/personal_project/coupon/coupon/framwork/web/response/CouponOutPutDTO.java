@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 public class CouponOutPutDTO {
     private Long id;
-    private Long eventId;
+    private Long promotionId;
     private DiscountType discountType;
     private Integer discountValue;
     private Integer maxQuantity;
@@ -24,7 +24,7 @@ public class CouponOutPutDTO {
     public static CouponOutPutDTO mapToDTO(Coupon coupon){
         return CouponOutPutDTO.builder()
                 .id(coupon.getId())
-                .eventId(coupon.getEvent().getId())
+                .promotionId(coupon.getPromotion().getId())
                 .discountType(coupon.getDiscountType())
                 .discountValue(coupon.getDiscountValue())
                 .maxQuantity(coupon.getMaxQuantity())

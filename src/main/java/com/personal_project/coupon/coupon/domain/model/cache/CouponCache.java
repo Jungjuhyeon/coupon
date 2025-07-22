@@ -1,4 +1,4 @@
-package com.personal_project.coupon.coupon.domain;
+package com.personal_project.coupon.coupon.domain.model.cache;
 
 import lombok.Builder;
 import lombok.Getter;

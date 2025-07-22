@@ -1,10 +1,10 @@
 package com.personal_project.coupon.coupon.application.inputport;
 
-import com.personal_project.coupon.coupon.application.outputport.CouponCacheOutPort;
-import com.personal_project.coupon.coupon.application.outputport.EventCacheOutPort;
+import com.personal_project.coupon.coupon.application.outputport.CouponCacheOutputPort;
+import com.personal_project.coupon.coupon.application.outputport.PromotionCacheOutputPort;
 import com.personal_project.coupon.coupon.application.usecase.IssueCouponUsecase;
-import com.personal_project.coupon.coupon.domain.CouponCache;
-import com.personal_project.coupon.coupon.domain.EventCache;
+import com.personal_project.coupon.coupon.domain.model.cache.CouponCache;
+import com.personal_project.coupon.coupon.domain.model.cache.PromotionCache;
 import com.personal_project.coupon.global.exception.BusinessException;
 import com.personal_project.coupon.global.exception.errorcode.CommonErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -20,18 +20,18 @@ import java.time.LocalDateTime;
 @Service
 public class IssueCouponInputPort implements IssueCouponUsecase {
 
-    private final EventCacheOutPort eventCacheOutPort;
-    private final CouponCacheOutPort couponCacheOutPort;
+    private final PromotionCacheOutputPort promotionCacheOutputPort;
+    private final CouponCacheOutputPort couponCacheOutputPort;
 
     @Override
-    public void issue(Long eventId, Long couponId, Long memberId){
+    public void issue(Long promotionId, Long couponId, Long memberId){
         LocalDateTime now = LocalDateTime.now();
         // 이벤트 및 쿠폰 검증
-        EventCache eventCache = eventCacheOutPort.getEventCache(eventId);
-        validateEvent(eventCache,now);
+        PromotionCache promotionCache = promotionCacheOutputPort.getPromotionCache(promotionId);
+        validateEvent(promotionCache,now);
 
         // 쿠폰 시간 검증
-        CouponCache couponCache = couponCacheOutPort.getCouponCache(couponId);
+        CouponCache couponCache = couponCacheOutputPort.getCouponCache(couponId);
         validateCoupon(couponCache, now.toLocalDate());
 
         //재고처리 & 중복체크
@@ -39,12 +39,12 @@ public class IssueCouponInputPort implements IssueCouponUsecase {
 
     }
 
-    private void validateEvent(EventCache eventCache, LocalDateTime now){
-        if (eventCache == null) {
-            throw new BusinessException(CommonErrorCode.EVENT_NOT_FOUND);
+    private void validateEvent(PromotionCache promotionCache, LocalDateTime now){
+        if (promotionCache == null) {
+            throw new BusinessException(CommonErrorCode.PROMOTION_NOT_FOUND);
         }
-        if(!eventCache.isValid(now)){
-            throw new BusinessException(CommonErrorCode.EVENT_NOT_ACTIVE);  // 이벤트 활성화되지 않음
+        if(!promotionCache.isValid(now)){
+            throw new BusinessException(CommonErrorCode.PROMOTION_NOT_ACTIVE);  // 이벤트 활성화되지 않음
         }
     }
 
@@ -59,7 +59,7 @@ public class IssueCouponInputPort implements IssueCouponUsecase {
 
 
     private void issueCouponWithStockCheck(Long memberId, Long couponId) {
-        Long result = (Long) couponCacheOutPort.checkStockAndIssueCoupon(memberId, couponId);
+        Long result = (Long) couponCacheOutputPort.checkStockAndIssueCoupon(memberId, couponId);
 
         if (result == null) {
             throw new BusinessException(CommonErrorCode.REDIS_SCRIPT_ERROR);  // Redis 스크립트 실행 중 오류 발생

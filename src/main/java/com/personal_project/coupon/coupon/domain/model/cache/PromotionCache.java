@@ -1,4 +1,4 @@
-package com.personal_project.coupon.coupon.domain;
+package com.personal_project.coupon.coupon.domain.model.cache;
 
 
 import lombok.Builder;
@@ -9,17 +9,17 @@ import java.time.LocalTime;
 
 @Getter
 @Builder
-public class EventCache {
+public class PromotionCache {
     private final Long id;
     private final LocalTime dailyStartTime;
     private final LocalTime dailyEndTime;
     private final LocalDateTime startDateTime;
     private final LocalDateTime endDateTime;
 
-    public static EventCache create(Long id,
-                                    LocalTime dailyStartTime,LocalTime dailyEndTime,
-                                    LocalDateTime startDateTime, LocalDateTime endDateTime){
-        return EventCache.builder()
+    public static PromotionCache create(Long id,
+                                        LocalTime dailyStartTime, LocalTime dailyEndTime,
+                                        LocalDateTime startDateTime, LocalDateTime endDateTime){
+        return PromotionCache.builder()
                 .id(id)
                 .dailyStartTime(dailyStartTime)
                 .dailyEndTime(dailyEndTime)

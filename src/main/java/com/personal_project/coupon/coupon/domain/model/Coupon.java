@@ -24,8 +24,8 @@ public class Coupon extends BaseEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "event_id")
-    private Event event;
+    @JoinColumn(name = "promotion_id")
+    private Promotion promotion;
 
     @Enumerated(EnumType.STRING)
     private DiscountType discountType;
@@ -47,9 +47,9 @@ public class Coupon extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private CouponStatus Couponstatus; //발급전 , 발급됨
 
-    public static Coupon create(Event event,CouponInfoDTO couponInfoDTO){
+    public static Coupon create(Promotion promotion, CouponInfoDTO couponInfoDTO){
         return Coupon.builder()
-                .event(event)
+                .promotion(promotion)
                 .discountType(couponInfoDTO.getDiscountType())
                 .discountValue(couponInfoDTO.getDiscountValue())
                 .maxQuantity(couponInfoDTO.getMaxQuantity())
@@ -62,7 +62,7 @@ public class Coupon extends BaseEntity {
     }
 
     public boolean isIssuable(LocalDateTime nowTime) {
-        return (nowTime.isAfter(event.getStartDateTime()) && nowTime.isBefore(event.getEndDateTime()));
+        return (nowTime.isAfter(promotion.getStartDateTime()) && nowTime.isBefore(promotion.getEndDateTime()));
     }
 
     public boolean isQuantity() {

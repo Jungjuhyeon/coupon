@@ -1,8 +1,8 @@
 package com.personal_project.coupon.coupon.framwork.web;
 
-import com.personal_project.coupon.coupon.application.usecase.AddEventUsecase;
-import com.personal_project.coupon.coupon.framwork.web.request.EventInfoDTO;
-import com.personal_project.coupon.coupon.framwork.web.response.EventOutPutDTO;
+import com.personal_project.coupon.coupon.application.usecase.AddPromotionUsecase;
+import com.personal_project.coupon.coupon.framwork.web.request.PromotionIdInfoDTO;
+import com.personal_project.coupon.coupon.framwork.web.response.PromotionOutPutDTO;
 import com.personal_project.coupon.global.exception.response.SuccessResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/events")
-public class EventController {
+public class PromotionController {
 
-    private final AddEventUsecase addEventUsecase;
+    private final AddPromotionUsecase addPromotionUsecase;
     @PostMapping("/create")
-    public SuccessResponse<EventOutPutDTO> createCoupon(@RequestBody EventInfoDTO request){
-        EventOutPutDTO response = addEventUsecase.addEvent(request);
+    public SuccessResponse<PromotionOutPutDTO> createCoupon(@RequestBody PromotionIdInfoDTO request){
+        PromotionOutPutDTO response = addPromotionUsecase.addPromotion(request);
         return SuccessResponse.success(response);
     }
 }

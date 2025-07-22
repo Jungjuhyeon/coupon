@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 @Getter
 public class CouponInfoDTO {
-    private Long eventId;
+    private Long promotionId;
 
     private DiscountType discountType;
 

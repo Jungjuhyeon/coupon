@@ -1,6 +1,6 @@
 package com.personal_project.coupon.coupon.framwork.web.response;
 
-import com.personal_project.coupon.coupon.domain.model.Event;
+import com.personal_project.coupon.coupon.domain.model.Promotion;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -9,7 +9,7 @@ import java.time.LocalTime;
 
 @Getter
 @Builder
-public class EventOutPutDTO {
+public class PromotionOutPutDTO {
     private Long id;
 
     private String name;
@@ -22,14 +22,14 @@ public class EventOutPutDTO {
 
     private LocalTime dailyEndTime; //매일 쿠폰 발급 종료 시간
 
-    public static EventOutPutDTO mapToDTO(Event event){
-        return EventOutPutDTO.builder()
-                .id(event.getId())
-                .name(event.getName())
-                .startDateTime(event.getStartDateTime())
-                .endDateTime(event.getEndDateTime())
-                .dailyStartTime(event.getDailyStartTime())
-                .dailyEndTime(event.getDailyEndTime())
+    public static PromotionOutPutDTO mapToDTO(Promotion promotion){
+        return PromotionOutPutDTO.builder()
+                .id(promotion.getId())
+                .name(promotion.getName())
+                .startDateTime(promotion.getStartDateTime())
+                .endDateTime(promotion.getEndDateTime())
+                .dailyStartTime(promotion.getDailyStartTime())
+                .dailyEndTime(promotion.getDailyEndTime())
                 .build();
     }
 

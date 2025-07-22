@@ -1,8 +1,8 @@
 package com.personal_project.coupon.coupon.framwork.redisadapter;
 
-import com.personal_project.coupon.coupon.application.outputport.EventCacheOutPort;
-import com.personal_project.coupon.coupon.domain.EventCache;
-import com.personal_project.coupon.coupon.framwork.web.request.EventInfoDTO;
+import com.personal_project.coupon.coupon.application.outputport.PromotionCacheOutputPort;
+import com.personal_project.coupon.coupon.domain.model.cache.PromotionCache;
+import com.personal_project.coupon.coupon.framwork.web.request.PromotionIdInfoDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -16,9 +16,9 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @Repository
 @RequiredArgsConstructor
-public class EventRedisAdapter implements EventCacheOutPort {
+public class PromotionIdRedisAdapter implements PromotionCacheOutputPort {
     private final RedisTemplate<String, Object> redisTemplate;
-    private static final String EVENT_KEY_PREFIX = "event:";
+    private static final String EVENT_KEY_PREFIX = "promotion:";
     private static final String DAILY_START_TIME= "dailyStartTime";
     private static final String DAILY_END_TIME = "dailyEndTime";
     private static final String START_DATE_TIME = "startDateTime";
@@ -29,23 +29,23 @@ public class EventRedisAdapter implements EventCacheOutPort {
 
     @Override
     // 🔹 이벤트 시간 정보 저장 (Hash 구조 사용)
-    public void saveEventTime(Long eventId, EventInfoDTO eventInfoDTO) {
+    public void savePromotionTime(Long promotionId, PromotionIdInfoDTO promotionIdInfoDTO) {
 
-        String key = EVENT_KEY_PREFIX + eventId;
+        String key = EVENT_KEY_PREFIX + promotionId;
 
-        redisTemplate.opsForHash().put(key, DAILY_START_TIME, eventInfoDTO.getDailyStartTime().format(FORMATTER_TIME));
-        redisTemplate.opsForHash().put(key, DAILY_END_TIME, eventInfoDTO.getDailyEndTime().format(FORMATTER_TIME));
-        redisTemplate.opsForHash().put(key, START_DATE_TIME, eventInfoDTO.getStartDateTime().format(FORMATTER_DATE_TIME));
-        redisTemplate.opsForHash().put(key, END_DATE_TIME, eventInfoDTO.getEndDateTime().format(FORMATTER_DATE_TIME));
+        redisTemplate.opsForHash().put(key, DAILY_START_TIME, promotionIdInfoDTO.getDailyStartTime().format(FORMATTER_TIME));
+        redisTemplate.opsForHash().put(key, DAILY_END_TIME, promotionIdInfoDTO.getDailyEndTime().format(FORMATTER_TIME));
+        redisTemplate.opsForHash().put(key, START_DATE_TIME, promotionIdInfoDTO.getStartDateTime().format(FORMATTER_DATE_TIME));
+        redisTemplate.opsForHash().put(key, END_DATE_TIME, promotionIdInfoDTO.getEndDateTime().format(FORMATTER_DATE_TIME));
 
         // 이벤트 종료 시간까지 TTL 설정
-        long durationMs = Duration.between(LocalDateTime.now(), eventInfoDTO.getEndDateTime()).toMillis();
+        long durationMs = Duration.between(LocalDateTime.now(), promotionIdInfoDTO.getEndDateTime()).toMillis();
         redisTemplate.expire(key, durationMs, TimeUnit.MILLISECONDS);
     }
 
     @Override
-    public EventCache getEventCache(Long eventId) {
-        String key = EVENT_KEY_PREFIX + eventId;
+    public PromotionCache getPromotionCache(Long promotionId) {
+        String key = EVENT_KEY_PREFIX + promotionId;
 
         String dailyStartTimeStr = (String) redisTemplate.opsForHash().get(key, DAILY_START_TIME);
         String dailyEndTimeStr = (String) redisTemplate.opsForHash().get(key, DAILY_END_TIME);
@@ -61,12 +61,12 @@ public class EventRedisAdapter implements EventCacheOutPort {
         LocalDateTime startDateTime = LocalDateTime.parse(startDateTimeStr);
         LocalDateTime endDateTime = LocalDateTime.parse(endDateTimeStr);
 
-        return EventCache.create(eventId, dailyStartTime, dailyEndTime,startDateTime,endDateTime);
+        return PromotionCache.create(promotionId, dailyStartTime, dailyEndTime,startDateTime,endDateTime);
     }
 
     @Override
-    public void deleteEventCache(Long eventId) {
-        String key = EVENT_KEY_PREFIX + eventId;
+    public void deletePromotionCache(Long promotionId) {
+        String key = EVENT_KEY_PREFIX + promotionId;
         redisTemplate.delete(key);
     }
 }

@@ -31,8 +31,8 @@ public enum CommonErrorCode implements ErrorCode{
 
 
     //event error(4101 ~ 4200)
-    EVENT_NOT_FOUND(HttpStatus.NOT_FOUND,"4101","해당 이벤트를 찾을 수 없습니다."),
-    EVENT_NOT_ACTIVE(HttpStatus.NOT_FOUND,"4102","이벤트 기간이 아닙니다."),
+    PROMOTION_NOT_FOUND(HttpStatus.NOT_FOUND,"4101","해당 이벤트를 찾을 수 없습니다."),
+    PROMOTION_NOT_ACTIVE(HttpStatus.NOT_FOUND,"4102","이벤트 기간이 아닙니다."),
 
     //coupon error(4201 ~ 4300)
     COUPON_NOT_FOUND(HttpStatus.NOT_FOUND,"4201","해당 쿠폰를 찾을 수 없습니다."),

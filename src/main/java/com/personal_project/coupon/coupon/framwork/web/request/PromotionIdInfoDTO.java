@@ -1,14 +1,13 @@
 package com.personal_project.coupon.coupon.framwork.web.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Getter
-public class EventInfoDTO {
+public class PromotionIdInfoDTO {
     private String name;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")

@@ -1,7 +1,7 @@
 package com.personal_project.coupon.coupon.framwork.redisadapter;
 
-import com.personal_project.coupon.coupon.application.outputport.CouponCacheOutPort;
-import com.personal_project.coupon.coupon.domain.CouponCache;
+import com.personal_project.coupon.coupon.application.outputport.CouponCacheOutputPort;
+import com.personal_project.coupon.coupon.domain.model.cache.CouponCache;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @Repository
 @RequiredArgsConstructor
-public class CouponRedisAdapter implements CouponCacheOutPort {
+public class CouponRedisAdapter implements CouponCacheOutputPort {
     private final RedisTemplate<String, String> redisTemplate;
     private static final String COUPON_KEY_PREFIX = "coupon:";
     private static final String STOCK = "stock";
