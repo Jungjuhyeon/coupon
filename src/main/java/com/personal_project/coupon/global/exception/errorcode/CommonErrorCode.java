@@ -38,10 +38,9 @@ public enum CommonErrorCode implements ErrorCode{
     COUPON_NOT_FOUND(HttpStatus.NOT_FOUND,"4201","해당 쿠폰를 찾을 수 없습니다."),
     COUPON_NOT_ACTIVE(HttpStatus.NOT_FOUND,"4202","쿠폰 발급 기간이 아닙니다."),
     COUPON_OUT_OF_STOCK(HttpStatus.NOT_FOUND,"4203", "쿠폰 재고가 부족합니다."),
-    COUPON_ALREADY_ISSUED(HttpStatus.BAD_REQUEST, "4204", "이미 쿠폰을 발급받았습니다."),
+    COUPON_ALREADY_ISSUED(HttpStatus.BAD_REQUEST, "4204", "이미 쿠폰을 발급받았습니다.");
+    ;
 
-    REDIS_SCRIPT_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "5001", "Redis 스크립트 실행 중 오류가 발생했습니다."),
-    LOCK_ACQUISITION_FAILED(HttpStatus.CONFLICT, "5002", "분산 락 획득에 실패했습니다.");
 
 
     private final HttpStatus httpStatus;
