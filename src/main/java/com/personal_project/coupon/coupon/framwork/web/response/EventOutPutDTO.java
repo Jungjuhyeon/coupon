@@ -1,6 +1,6 @@
 package com.personal_project.coupon.coupon.framwork.web.response;
 
-import com.personal_project.coupon.coupon.domain.entity.Event;
+import com.personal_project.coupon.coupon.domain.model.Event;
 import lombok.Builder;
 import lombok.Getter;
 

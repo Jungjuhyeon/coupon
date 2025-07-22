@@ -4,7 +4,7 @@ package com.personal_project.coupon.coupon.application.inputport;
 import com.personal_project.coupon.coupon.application.outputport.EventCacheOutPort;
 import com.personal_project.coupon.coupon.application.outputport.EventOutport;
 import com.personal_project.coupon.coupon.application.usecase.AddEventUsecase;
-import com.personal_project.coupon.coupon.domain.entity.Event;
+import com.personal_project.coupon.coupon.domain.model.Event;
 import com.personal_project.coupon.coupon.framwork.web.request.EventInfoDTO;
 import com.personal_project.coupon.coupon.framwork.web.response.EventOutPutDTO;
 import lombok.RequiredArgsConstructor;

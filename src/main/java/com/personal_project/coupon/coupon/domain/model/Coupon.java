@@ -1,8 +1,8 @@
-package com.personal_project.coupon.coupon.domain.entity;
+package com.personal_project.coupon.coupon.domain.model;
 
 
-import com.personal_project.coupon.coupon.domain.enumeration.CouponStatus;
-import com.personal_project.coupon.coupon.domain.enumeration.DiscountType;
+import com.personal_project.coupon.coupon.domain.model.enumeration.CouponStatus;
+import com.personal_project.coupon.coupon.domain.model.enumeration.DiscountType;
 import com.personal_project.coupon.coupon.framwork.web.request.CouponInfoDTO;
 import com.personal_project.coupon.global.entity.BaseEntity;
 import jakarta.persistence.*;
@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@Setter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)

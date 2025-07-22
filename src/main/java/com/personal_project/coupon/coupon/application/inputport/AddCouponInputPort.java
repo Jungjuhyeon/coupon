@@ -4,22 +4,25 @@ import com.personal_project.coupon.coupon.application.outputport.CouponCacheOutP
 import com.personal_project.coupon.coupon.application.outputport.CouponOutPort;
 import com.personal_project.coupon.coupon.application.outputport.EventOutport;
 import com.personal_project.coupon.coupon.application.usecase.AddCouponUsecase;
-import com.personal_project.coupon.coupon.domain.entity.Coupon;
-import com.personal_project.coupon.coupon.domain.entity.Event;
+import com.personal_project.coupon.coupon.domain.model.Coupon;
+import com.personal_project.coupon.coupon.domain.model.Event;
 import com.personal_project.coupon.coupon.framwork.web.request.CouponInfoDTO;
 import com.personal_project.coupon.coupon.framwork.web.response.CouponOutPutDTO;
 import com.personal_project.coupon.global.exception.BusinessException;
 import com.personal_project.coupon.global.exception.errorcode.CommonErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class AddCouponInputPort implements AddCouponUsecase {
     private final CouponOutPort couponOutPort;
     private final EventOutport eventOutport;
     private final CouponCacheOutPort couponCacheOutPort;
 
+    @Transactional
     public CouponOutPutDTO AddCoupon(CouponInfoDTO couponInfoDTO){
 
         Event event = eventOutport.findById(couponInfoDTO.getEventId()).orElseThrow(()->new BusinessException(CommonErrorCode.EVENT_NOT_FOUND));

@@ -1,7 +1,7 @@
 package com.personal_project.coupon.coupon.framwork.web.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.personal_project.coupon.coupon.domain.enumeration.DiscountType;
+import com.personal_project.coupon.coupon.domain.model.enumeration.DiscountType;
 import lombok.Getter;
 
 import java.time.LocalDate;

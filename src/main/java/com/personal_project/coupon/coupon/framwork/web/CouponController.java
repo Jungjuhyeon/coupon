@@ -6,6 +6,8 @@ import com.personal_project.coupon.coupon.framwork.web.request.CouponInfoDTO;
 import com.personal_project.coupon.coupon.framwork.web.response.CouponOutPutDTO;
 import com.personal_project.coupon.global.exception.response.SuccessResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,7 +22,7 @@ public class CouponController {
     public SuccessResponse<String> issue(@RequestParam Long eventId,
                                          @RequestParam Long couponId,
                                          @RequestParam Long memberId)
-                                         {
+    {
         issueCouponUsecase.issue(eventId,couponId,memberId);
         return SuccessResponse.successWithoutResult("발급성공");
     }
@@ -30,5 +32,4 @@ public class CouponController {
         CouponOutPutDTO response = addCouponUsecase.AddCoupon(request);
         return SuccessResponse.success(response);
     }
-
 }

@@ -1,7 +1,7 @@
 package com.personal_project.coupon.coupon.framwork.jpaadapter;
 
 import com.personal_project.coupon.coupon.application.outputport.EventOutport;
-import com.personal_project.coupon.coupon.domain.entity.Event;
+import com.personal_project.coupon.coupon.domain.model.Event;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

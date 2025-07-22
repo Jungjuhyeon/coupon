@@ -1,4 +1,4 @@
-package com.personal_project.coupon.coupon.domain.enumeration;
+package com.personal_project.coupon.coupon.domain.model.enumeration;
 
 public enum DiscountType {
     PERCENTAGE, FIXED_AMOUNT, FREE_SHIPPING, FIRST_PURCHASE

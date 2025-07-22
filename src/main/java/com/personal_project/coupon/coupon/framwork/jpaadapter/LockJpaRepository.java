@@ -1,6 +1,6 @@
 package com.personal_project.coupon.coupon.framwork.jpaadapter;
 
-import com.personal_project.coupon.coupon.domain.entity.Coupon;
+import com.personal_project.coupon.coupon.domain.model.Coupon;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

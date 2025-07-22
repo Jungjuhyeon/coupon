@@ -2,8 +2,8 @@ package com.personal_project.coupon.coupon.application.service.sync;
 
 import com.personal_project.coupon.coupon.application.outputport.CouponIssueOutPort;
 import com.personal_project.coupon.coupon.application.outputport.CouponOutPort;
-import com.personal_project.coupon.coupon.domain.entity.Coupon;
-import com.personal_project.coupon.coupon.domain.entity.CouponIssue;
+import com.personal_project.coupon.coupon.domain.model.Coupon;
+import com.personal_project.coupon.coupon.domain.model.CouponIssue;
 import com.personal_project.coupon.global.exception.BusinessException;
 import com.personal_project.coupon.global.exception.errorcode.CommonErrorCode;
 import com.personal_project.coupon.member.applicaion.outputport.MemberOutputPort;
@@ -33,5 +33,6 @@ public class CouponIssueServiceHelper {
 
         CouponIssue couponIssue = CouponIssue.create(member, coupon, now);
         couponIssueOutPort.save(couponIssue);
+
     }
 }

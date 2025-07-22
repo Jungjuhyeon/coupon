@@ -1,6 +1,6 @@
 package com.personal_project.coupon.coupon.application.outputport;
 
-import com.personal_project.coupon.coupon.domain.entity.Event;
+import com.personal_project.coupon.coupon.domain.model.Event;
 
 import java.util.Optional;
 

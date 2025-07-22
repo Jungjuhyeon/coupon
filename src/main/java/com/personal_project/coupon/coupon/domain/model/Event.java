@@ -1,6 +1,6 @@
-package com.personal_project.coupon.coupon.domain.entity;
+package com.personal_project.coupon.coupon.domain.model;
 
-import com.personal_project.coupon.coupon.domain.enumeration.EventStatus;
+import com.personal_project.coupon.coupon.domain.model.enumeration.EventStatus;
 import com.personal_project.coupon.coupon.framwork.web.request.EventInfoDTO;
 import com.personal_project.coupon.global.entity.BaseEntity;
 import jakarta.persistence.*;
@@ -9,7 +9,7 @@ import lombok.*;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-import static com.personal_project.coupon.coupon.domain.enumeration.EventStatus.START;
+import static com.personal_project.coupon.coupon.domain.model.enumeration.EventStatus.START;
 
 @Entity
 @Getter
