@@ -1,10 +1,14 @@
 package com.personal_project.coupon.coupon.application.inputport;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.personal_project.coupon.coupon.application.outputport.CouponCacheOutputPort;
+import com.personal_project.coupon.coupon.application.outputport.EventOutputPort;
 import com.personal_project.coupon.coupon.application.outputport.PromotionCacheOutputPort;
 import com.personal_project.coupon.coupon.application.usecase.IssueCouponUsecase;
+import com.personal_project.coupon.coupon.domain.model.CouponIssue;
 import com.personal_project.coupon.coupon.domain.model.cache.CouponCache;
 import com.personal_project.coupon.coupon.domain.model.cache.PromotionCache;
+import com.personal_project.coupon.coupon.domain.model.event.CouponIssuedEvent;
 import com.personal_project.coupon.global.exception.BusinessException;
 import com.personal_project.coupon.global.exception.errorcode.CommonErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -22,20 +26,25 @@ public class IssueCouponInputPort implements IssueCouponUsecase {
 
     private final PromotionCacheOutputPort promotionCacheOutputPort;
     private final CouponCacheOutputPort couponCacheOutputPort;
+    private final EventOutputPort eventOutputPort;
 
     @Override
-    public void issue(Long promotionId, Long couponId, Long memberId){
-        LocalDateTime now = LocalDateTime.now();
+    public void issue(Long promotionId, Long couponId, Long memberId) throws JsonProcessingException {
+        LocalDateTime curTime = LocalDateTime.now();
         // 이벤트 및 쿠폰 검증
         PromotionCache promotionCache = promotionCacheOutputPort.getPromotionCache(promotionId);
-        validateEvent(promotionCache,now);
+        validateEvent(promotionCache,curTime);
 
         // 쿠폰 시간 검증
         CouponCache couponCache = couponCacheOutputPort.getCouponCache(couponId);
-        validateCoupon(couponCache, now.toLocalDate());
+        validateCoupon(couponCache, curTime.toLocalDate());
 
         //재고처리 & 중복체크
         issueCouponWithStockCheck(memberId, couponId);
+
+        CouponIssuedEvent couponIssuedEvent = CouponIssue.createCouponIssueEvent(couponId, memberId, curTime);
+        //이벤트 처리
+        eventOutputPort.occurCouponIssuedEvent(couponIssuedEvent);
 
     }
 
@@ -66,6 +75,7 @@ public class IssueCouponInputPort implements IssueCouponUsecase {
         } else if (result == 0) {
             throw new BusinessException(CommonErrorCode.COUPON_OUT_OF_STOCK);  // 재고 부족
         } else if (result == 2) {
+            System.out.println("이미 발급된 아이디 : "+ memberId);
             throw new BusinessException(CommonErrorCode.COUPON_ALREADY_ISSUED);  // 이미 발급된 경우
         }
     }

@@ -1,6 +1,7 @@
 package com.personal_project.coupon.coupon.domain.model;
 
 import com.personal_project.coupon.coupon.domain.model.enumeration.CouponIssueStatus;
+import com.personal_project.coupon.coupon.domain.model.event.CouponIssuedEvent;
 import com.personal_project.coupon.global.entity.BaseEntity;
 import com.personal_project.coupon.member.domain.Member;
 import jakarta.persistence.*;
@@ -40,6 +41,11 @@ public class CouponIssue extends BaseEntity {
                 .issuedAt(now)
                 .couponIssueStatus(CouponIssueStatus.ISSUED)
                 .build();
+    }
+
+    //이벤트 생성
+    public static CouponIssuedEvent createCouponIssueEvent(Long couponId, Long memberId, LocalDateTime curTime){
+        return new CouponIssuedEvent(couponId,memberId,curTime);
     }
 
 }
