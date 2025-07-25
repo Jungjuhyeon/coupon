@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class TestController {
 
-    @GetMapping("/test")
+    @GetMapping("/health")
 
     public SuccessResponse<String> test(){
         log.info("success");
