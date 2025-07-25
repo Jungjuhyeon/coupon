@@ -34,7 +34,7 @@ public class Coupon extends BaseEntity {
 
     private Integer maxQuantity;
 
-    private Integer issuedQuantity;
+//    private Integer issuedQuantity;
 
     private LocalDate startDate; //쿠폰 발핼일 시작일
 
@@ -53,7 +53,7 @@ public class Coupon extends BaseEntity {
                 .discountType(couponInfoDTO.getDiscountType())
                 .discountValue(couponInfoDTO.getDiscountValue())
                 .maxQuantity(couponInfoDTO.getMaxQuantity())
-                .issuedQuantity(0)
+//                .issuedQuantity(0)
                 .startDate(couponInfoDTO.getStartDate())
                 .endDate(couponInfoDTO.getEndDate())
                 .usageStartDateTime(couponInfoDTO.getUsageStartDateTime())
@@ -65,11 +65,11 @@ public class Coupon extends BaseEntity {
         return (nowTime.isAfter(promotion.getStartDateTime()) && nowTime.isBefore(promotion.getEndDateTime()));
     }
 
-    public boolean isQuantity() {
-        return issuedQuantity < maxQuantity;
-    }
+//    public boolean isQuantity() {
+//        return issuedQuantity < maxQuantity;
+//    }
 
-    public void increaseStock() {
-        ++issuedQuantity;
-    }
+//    public void increaseStock() {
+//        ++issuedQuantity;
+//    }
 }
