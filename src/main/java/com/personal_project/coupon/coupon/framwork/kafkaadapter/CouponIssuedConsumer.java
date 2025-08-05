@@ -29,7 +29,7 @@ public class CouponIssuedConsumer {
     private final CouponOutputPort couponOutputPort;
     private final CouponIssueOutputPort couponIssueOutputPort;
 
-    @KafkaListener(topics = "${consumer.topic1.name}", groupId = "${consumer.groupid.name}")
+    @KafkaListener(topics = "${kafka.consumer.topic1.name}", groupId = "${kafka.consumer.groupid.name}")
     public void consumeIssue(ConsumerRecord<String,String> record) throws IOException{
         System.out.println("issue:" + record.value());
 

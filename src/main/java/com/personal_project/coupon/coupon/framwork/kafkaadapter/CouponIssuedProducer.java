@@ -17,7 +17,7 @@ import java.util.concurrent.CompletableFuture;
 @Slf4j
 public class CouponIssuedProducer implements EventOutputPort {
 
-    @Value(value = "${producers.topic1.name}")
+    @Value(value = "${kafka.producers.topic1.name}")
     private String TOPIC_ISSUE;
 
     private final KafkaTemplate<String, CouponIssuedEvent> kafkaTemplate;
