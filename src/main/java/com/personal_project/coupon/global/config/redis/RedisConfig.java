@@ -39,11 +39,11 @@ public class RedisConfig {
         return redisTemplate;
     }
 
-    //redsson 설정 분산락
-    @Bean
-    public RedissonClient redissonClient(){
-        Config config = new Config();
-        config.useSingleServer().setAddress(REDISSON_HOST_PREFIX + host + ":" + port);
-        return Redisson.create(config);
-    }
+//    //redsson 설정 분산락
+//    @Bean
+//    public RedissonClient redissonClient(){
+//        Config config = new Config();
+//        config.useSingleServer().setAddress(REDISSON_HOST_PREFIX + host + ":" + port);
+//        return Redisson.create(config);
+//    }
 }
