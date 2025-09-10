@@ -11,17 +11,18 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CouponIssueLogAdapter implements CouponIssueLogOutputPort {
 
-    private final CouponIssueLogJpaAdapter couponIssueLogJpaAdapter;
+    private final CouponIssueLogJpaRepository couponIssueLogJpaRepository;
+    private final CouponIssueLogBulkRepository couponIssueLogBulkRepository;
 
     @Override
     public void save(CouponIssueLog couponIssueLog){
-        couponIssueLogJpaAdapter.save(couponIssueLog);
+        couponIssueLogJpaRepository.save(couponIssueLog);
     }
 
 
     @Override
     public void saveAll(List<CouponIssueLog> batch){
-        couponIssueLogJpaAdapter.saveAll(batch);
+        couponIssueLogBulkRepository.saveAll(batch);
     }
 
 }
