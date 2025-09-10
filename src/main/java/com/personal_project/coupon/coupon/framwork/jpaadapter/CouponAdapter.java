@@ -11,15 +11,15 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CouponAdapter implements CouponOutputPort {
 
-    private final CouponRepository couponRepository;
+    private final CouponJpaRepository couponJpaRepository;
     @Override
     public Optional<Coupon> findById(Long couponId){
-        return couponRepository.findById(couponId);
+        return couponJpaRepository.findById(couponId);
     }
 
     @Override
     public Coupon save(Coupon coupon){
-        return couponRepository.save(coupon);
+        return couponJpaRepository.save(coupon);
     }
 
 
