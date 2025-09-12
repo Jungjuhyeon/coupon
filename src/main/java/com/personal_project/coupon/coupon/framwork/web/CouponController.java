@@ -1,5 +1,6 @@
 package com.personal_project.coupon.coupon.framwork.web;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.personal_project.coupon.coupon.application.usecase.AddCouponUsecase;
 import com.personal_project.coupon.coupon.application.usecase.IssueCouponUsecase;
 import com.personal_project.coupon.coupon.framwork.web.request.CouponInfoDTO;
@@ -17,11 +18,10 @@ public class CouponController {
     private final AddCouponUsecase addCouponUsecase;
 
     @PostMapping("/issue")
-    public SuccessResponse<String> issue(@RequestParam Long eventId,
+    public SuccessResponse<String> issue(@RequestParam Long promotionId,
                                          @RequestParam Long couponId,
-                                         @RequestParam Long memberId)
-                                         {
-        issueCouponUsecase.issue(eventId,couponId,memberId);
+                                         @RequestParam Long memberId) throws JsonProcessingException {
+        issueCouponUsecase.issue(promotionId,couponId,memberId);
         return SuccessResponse.successWithoutResult("발급성공");
     }
 
@@ -30,5 +30,4 @@ public class CouponController {
         CouponOutPutDTO response = addCouponUsecase.AddCoupon(request);
         return SuccessResponse.success(response);
     }
-
 }

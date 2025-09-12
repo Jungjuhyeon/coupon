@@ -1,10 +1,9 @@
 package com.personal_project.coupon.coupon.framwork.web.response;
 
-import com.personal_project.coupon.coupon.domain.entity.Coupon;
-import com.personal_project.coupon.coupon.domain.enumeration.DiscountType;
+import com.personal_project.coupon.coupon.domain.model.Coupon;
+import com.personal_project.coupon.coupon.domain.model.enumeration.DiscountType;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -13,7 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 public class CouponOutPutDTO {
     private Long id;
-    private Long eventId;
+    private Long promotionId;
     private DiscountType discountType;
     private Integer discountValue;
     private Integer maxQuantity;
@@ -25,7 +24,7 @@ public class CouponOutPutDTO {
     public static CouponOutPutDTO mapToDTO(Coupon coupon){
         return CouponOutPutDTO.builder()
                 .id(coupon.getId())
-                .eventId(coupon.getEvent().getId())
+                .promotionId(coupon.getPromotion().getId())
                 .discountType(coupon.getDiscountType())
                 .discountValue(coupon.getDiscountValue())
                 .maxQuantity(coupon.getMaxQuantity())

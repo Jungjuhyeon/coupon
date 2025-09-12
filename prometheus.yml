@@ -1,0 +1,20 @@
+global:
+  scrape_interval: 5s
+
+remote_write:
+  - url: "http://prometheus:9090/api/v1/write"  # Prometheus의 컨테이너 주소를 사용
+
+scrape_configs:
+
+  - job_name: 'mysqld_exporter'
+    metrics_path: /metrics
+    static_configs:
+#      - targets: ['host.docker.internal:9104']
+      - targets: ['mysqld_exporter:9104']
+
+  - job_name: java_application
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['host.docker.internal:8080']
+#      - targets: ['localhost:8080']
+#      - targets: ['my-server:8080']
