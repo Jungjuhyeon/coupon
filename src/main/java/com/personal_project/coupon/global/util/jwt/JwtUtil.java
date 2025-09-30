@@ -94,7 +94,13 @@ public class JwtUtil {
     public Authentication getAuthentication(String token) {
         Long id = getIdFromToken(token);
         Member member = memberService.findById(id).orElse(null);
-        return new UsernamePasswordAuthenticationToken(id, null, List.of(new SimpleGrantedAuthority(member.getRole().getKey())));
+        CustomUserDetails userDetails = new CustomUserDetails(member.getId(), member.getRole().getKey());
+        return new UsernamePasswordAuthenticationToken(
+                userDetails,
+                null,
+                userDetails.getAuthorities()
+        );
+//        return new UsernamePasswordAuthenticationToken(member, null, List.of(new SimpleGrantedAuthority(member.getRole().getKey())));
     }
 
     public void isTokenValid(String token){

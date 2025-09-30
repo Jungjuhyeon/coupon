@@ -27,12 +27,14 @@ public class CouponIssueLog extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private EventType eventType;
 
+    private CouponIssueLog(Long memberId, Long couponId, EventType eventType){
+        this.memberId = memberId;
+        this.couponId = couponId;
+        this.eventType = eventType;
+    }
+
     public static CouponIssueLog create(Long memberId,Long couponId,EventType eventType){
-        return CouponIssueLog.builder()
-                .memberId(memberId)
-                .couponId(couponId)
-                .eventType(eventType)
-                .build();
+        return new CouponIssueLog(memberId, couponId, eventType);
     }
 
     //이벤트 생성
