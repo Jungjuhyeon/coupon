@@ -34,18 +34,23 @@ public class CouponIssue extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private CouponIssueStatus couponIssueStatus;     //발급됨, 사용됨
 
-    public static CouponIssue create(Member member,Coupon coupon, LocalDateTime now){
-        return CouponIssue.builder()
-                .member(member)
-                .coupon(coupon)
-                .issuedAt(now)
-                .couponIssueStatus(CouponIssueStatus.ISSUED)
-                .build();
+    private CouponIssue(Member member,Coupon coupon, LocalDateTime now){
+        this.member = member;
+        this.coupon = coupon;
+        this.issuedAt = now;
+        this.couponIssueStatus = CouponIssueStatus.ISSUED;
     }
-
     //이벤트 생성
     public static CouponIssuedEvent createCouponIssueEvent(Long couponId, Long memberId, LocalDateTime curTime){
         return new CouponIssuedEvent(couponId,memberId,curTime);
+    }
+
+    public static CouponIssue create(Member member,Coupon coupon, LocalDateTime now){
+        return new CouponIssue(member, coupon, now);
+    }
+
+    public void couponUse() {
+        this.couponIssueStatus = CouponIssueStatus.USED;
     }
 
 }

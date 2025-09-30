@@ -34,8 +34,6 @@ public class Coupon extends BaseEntity {
 
     private Integer maxQuantity;
 
-//    private Integer issuedQuantity;
-
     private LocalDate startDate; //쿠폰 발핼일 시작일
 
     private LocalDate endDate; //쿠폰 발행 종료일
@@ -47,29 +45,26 @@ public class Coupon extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private CouponStatus Couponstatus; //발급전 , 발급됨
 
+    private Coupon(Promotion promotion,DiscountType discountType,Integer discountValue, Integer maxQuantity,
+                   LocalDate startDate, LocalDate endDate, LocalDateTime usageStartDateTime, LocalDateTime usageEndDateTime){
+        this.promotion = promotion;
+        this.discountType = discountType;
+        this.discountValue = discountValue;
+        this.maxQuantity =maxQuantity;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.usageStartDateTime = usageStartDateTime;
+        this.usageEndDateTime = usageEndDateTime;
+        this.Couponstatus = CouponStatus.ISSUED;
+    }
     public static Coupon create(Promotion promotion, CouponInfoDTO couponInfoDTO){
-        return Coupon.builder()
-                .promotion(promotion)
-                .discountType(couponInfoDTO.getDiscountType())
-                .discountValue(couponInfoDTO.getDiscountValue())
-                .maxQuantity(couponInfoDTO.getMaxQuantity())
-//                .issuedQuantity(0)
-                .startDate(couponInfoDTO.getStartDate())
-                .endDate(couponInfoDTO.getEndDate())
-                .usageStartDateTime(couponInfoDTO.getUsageStartDateTime())
-                .usageEndDateTime(couponInfoDTO.getUsageEndDateTime())
-                .build();
+        return new Coupon(promotion,couponInfoDTO.getDiscountType(),couponInfoDTO.getDiscountValue(),
+                couponInfoDTO.getMaxQuantity(),couponInfoDTO.getStartDate(),couponInfoDTO.getEndDate(),
+                couponInfoDTO.getUsageStartDateTime(),couponInfoDTO.getUsageEndDateTime());
     }
 
-    public boolean isIssuable(LocalDateTime nowTime) {
-        return (nowTime.isAfter(promotion.getStartDateTime()) && nowTime.isBefore(promotion.getEndDateTime()));
+    public boolean isUsableNow(LocalDateTime now) {
+        return !now.isBefore(usageStartDateTime) && now.isBefore(usageEndDateTime);
     }
 
-//    public boolean isQuantity() {
-//        return issuedQuantity < maxQuantity;
-//    }
-
-//    public void increaseStock() {
-//        ++issuedQuantity;
-//    }
 }

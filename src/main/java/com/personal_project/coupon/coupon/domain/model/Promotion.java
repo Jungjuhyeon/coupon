@@ -36,15 +36,22 @@ public class Promotion extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private PromotionStatus promotionStatus; //시작전, 시작, 마감
 
+    private Promotion(String name, LocalDateTime startDateTime, LocalDateTime endDateTime, LocalTime dailyStartTime, LocalTime dailyEndTime){
+        this.name =name;
+        this.startDateTime = startDateTime;
+        this.endDateTime = endDateTime;
+        this.dailyStartTime = dailyStartTime;
+        this.dailyEndTime = dailyEndTime;
+        this.promotionStatus = START;
+    }
     public static Promotion create(PromotionIdInfoDTO promotionIdInfoDTO){
-        return Promotion.builder()
-                .name(promotionIdInfoDTO.getName())
-                .startDateTime(promotionIdInfoDTO.getStartDateTime())
-                .endDateTime(promotionIdInfoDTO.getEndDateTime())
-                .dailyStartTime(promotionIdInfoDTO.getDailyStartTime())
-                .dailyEndTime(promotionIdInfoDTO.getDailyEndTime())
-                .promotionStatus(START)
-                .build();
+        return new Promotion(
+                promotionIdInfoDTO.getName(),
+                promotionIdInfoDTO.getStartDateTime(),
+                promotionIdInfoDTO.getEndDateTime(),
+                promotionIdInfoDTO.getDailyStartTime(),
+                promotionIdInfoDTO.getDailyEndTime()
+        );
     }
 
 }
