@@ -5,6 +5,8 @@ import com.personal_project.coupon.order.domain.model.Order;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 @RequiredArgsConstructor
 public class OrderAdapter implements OrderOutputPort {
@@ -13,6 +15,17 @@ public class OrderAdapter implements OrderOutputPort {
     @Override
     public Order save(Order order){
         return orderJpaRepository.save(order);
+    }
+
+    @Override
+    public Optional<Order> findById(Long orderId){
+        return orderJpaRepository.findById(orderId);
+    }
+
+
+    @Override
+    public Optional<Order> findOrderDetail(Long memberId,Long orderId){
+        return orderJpaRepository.findOrderDetail(memberId,orderId);
     }
 
 }

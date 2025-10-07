@@ -50,8 +50,8 @@ public class Order extends BaseEntity {
 
     private String comment;
 
+    @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
-
     private Order(Member member, Store store, CouponIssue couponIssue, String deliveryAddress, LocalDateTime orderTime, String comment){
         this.member = member;
         this.store = store;
@@ -93,12 +93,12 @@ public class Order extends BaseEntity {
         this.orderMenuList.add(orderMenu);
         orderMenu.changeOrder(this); // setter 대신 연관관계 메서드 호출
     }
+
     // 연관관계 편의 메서드 (컬렉션)
     public void addOrderMenus(List<OrderMenu> orderMenus) {
         for (OrderMenu orderMenu : orderMenus) {
             addOrderMenu(orderMenu); // 단건 추가 재사용
         }
     }
-
 
 }

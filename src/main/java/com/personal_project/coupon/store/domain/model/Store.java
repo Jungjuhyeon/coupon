@@ -22,7 +22,7 @@ public class Store extends BaseEntity {
     @Column(name = "store_id")
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "brand_id")
     private Brand brand;
 
