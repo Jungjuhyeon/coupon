@@ -1,6 +1,7 @@
 package com.personal_project.coupon.order.application.inputport;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.personal_project.coupon.coupon.application.outputport.CouponIssueOutputPort;
 import com.personal_project.coupon.coupon.domain.model.CouponIssue;
 import com.personal_project.coupon.coupon.domain.model.enumeration.CouponIssueStatus;
@@ -8,10 +9,12 @@ import com.personal_project.coupon.global.exception.BusinessException;
 import com.personal_project.coupon.global.exception.errorcode.CommonErrorCode;
 import com.personal_project.coupon.member.applicaion.outputport.MemberOutputPort;
 import com.personal_project.coupon.member.domain.Member;
+import com.personal_project.coupon.order.application.outputport.OrderEventOutputPort;
 import com.personal_project.coupon.order.application.outputport.OrderOutputPort;
 import com.personal_project.coupon.order.application.usecase.AddOrderUseCase;
 import com.personal_project.coupon.order.domain.model.Order;
 import com.personal_project.coupon.order.domain.model.OrderMenu;
+import com.personal_project.coupon.order.domain.model.event.OrderCreatedEvent;
 import com.personal_project.coupon.order.framwork.web.request.OrderInputDTO;
 import com.personal_project.coupon.order.framwork.web.request.OrderMenuInfoDTO;
 import com.personal_project.coupon.order.framwork.web.response.OrderOutputDTO;
@@ -31,6 +34,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static com.personal_project.coupon.order.domain.model.Order.createOrderEvent;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -42,10 +47,11 @@ public class AddOrderInputPort implements AddOrderUseCase {
     private final MenuOutputPort menuOutputPort;
     private final OrderOutputPort orderOutputPort;
     private final PaymentOutputPort paymentOutputPort;
+    private final OrderEventOutputPort orderEventOutputPort;
 
     @Override
     @Transactional
-    public OrderOutputDTO create(Long memberId, Long storeId, OrderInputDTO request){
+    public OrderOutputDTO create(Long memberId, Long storeId, OrderInputDTO request) throws JsonProcessingException {
         Member member = memberOutputPort.findById(memberId)
                 .orElseThrow(()-> new BusinessException(CommonErrorCode.USER_NOT_FOUND));
 
@@ -81,6 +87,10 @@ public class AddOrderInputPort implements AddOrderUseCase {
         orderOutputPort.save(order);
 
         paymentOutputPort.save(Payment.create(order,order.getFinalPrice()));
+
+        //이벤트 발행
+        OrderCreatedEvent orderCreatedEvent = createOrderEvent(memberId,order.getId());
+        orderEventOutputPort.occurOrderEvent(orderCreatedEvent);
 
         return OrderOutputDTO.mapToDTO(order.getId());
     }

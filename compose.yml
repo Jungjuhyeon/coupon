@@ -1,5 +1,15 @@
 
 services:
+  mongodb:
+    image: mongo:latest
+    container_name: mongo_order_read
+    ports:
+      - "27017:27017"
+    volumes:
+      - /Users/jeongjuhyeon/개발/docker-mongo/mongo_data:/var/lib/db
+    networks:
+      - coupon-network
+
   # MySQL 서비스
   my-mysql:
     image: mysql:latest
@@ -87,6 +97,25 @@ services:
       - KAFKA_CLUSTERS_0
 
   # Spring Boot 애플리케이션 서비스 (my-server)
+#  my-server:
+#    build: .
+#    container_name: my-server
+#    cpus: 2.0  # CPU 리소스 2개의 vCPU 할당
+#    mem_limit: 2g  # 메모리 2GB로 설정
+#    ports:
+#      - "8080:8080"
+#    depends_on:
+#      - my-mysql
+#      - cache-server
+#    networks:
+#      - coupon-network
+#    privileged: true  # 호스트 자원 접근 허용
+#    healthcheck:
+#      test: [ "CMD", "curl", "-f", "http://localhost:8080/test" ]  # /test 엔드포인트로 건강 체크
+#      interval: 30s
+#      retries: 3
+#      start_period: 10s
+#      timeout: 10s
   my-server:
     build: .
     container_name: my-server
@@ -156,3 +185,18 @@ services:
 networks:
   coupon-network:
     driver: bridge
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

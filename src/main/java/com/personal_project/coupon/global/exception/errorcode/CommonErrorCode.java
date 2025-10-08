@@ -29,7 +29,6 @@ public enum CommonErrorCode implements ErrorCode{
     USER_PASSWORD_MISMATCH(HttpStatus.UNAUTHORIZED, "4003", "비밀번호가 일치하지 않습니다."),
     LOGOUT_MEMBER(HttpStatus.FORBIDDEN, "3001", "로그아웃된 사용자입니다.(재 로그인 하세요."),
 
-
     //event error(4101 ~ 4200)
     PROMOTION_NOT_FOUND(HttpStatus.NOT_FOUND,"4101","해당 이벤트를 찾을 수 없습니다."),
     PROMOTION_NOT_ACTIVE(HttpStatus.NOT_FOUND,"4102","이벤트 기간이 아닙니다."),
@@ -56,6 +55,10 @@ public enum CommonErrorCode implements ErrorCode{
 
     //menu error(4551 ~ 4600)
     MENU_CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND,"4551","해당 메뉴카테고리는 존재하지 않습니다."),
+
+    ORDER_NOT_FOUND(HttpStatus.NOT_FOUND,"4601","해당 주문는 존재하지 않습니다."),
+
+    PAYMENT_NOT_FOUND(HttpStatus.NOT_FOUND,"4651","해당 결제는 존재하지 않습니다."),
 
     REDIS_SCRIPT_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "5001", "Redis 스크립트 실행 중 오류가 발생했습니다."),
     LOCK_ACQUISITION_FAILED(HttpStatus.CONFLICT, "5002", "분산 락 획득에 실패했습니다.");

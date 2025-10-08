@@ -5,6 +5,8 @@ import com.personal_project.coupon.payment.domain.model.Payment;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 @RequiredArgsConstructor
 public class PaymentAdapter implements PaymentOutputPort {
@@ -15,4 +17,10 @@ public class PaymentAdapter implements PaymentOutputPort {
     public void save(Payment payment){
         paymentJpaRepository.save(payment);
     }
+
+    @Override
+    public Optional<Payment> findByOrderId(Long paymentId){
+       return paymentJpaRepository.findByOrderId(paymentId);
+    }
+
 }
