@@ -7,9 +7,12 @@ import com.personal_project.coupon.order.application.usecase.InquiryOrderUseCase
 import com.personal_project.coupon.order.framwork.web.request.OrderInputDTO;
 import com.personal_project.coupon.order.framwork.web.response.OrderInfoOutPutDTO;
 import com.personal_project.coupon.order.framwork.web.response.OrderOutputDTO;
+import com.personal_project.coupon.order.framwork.web.response.OrderSummaryOutputDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,14 +33,21 @@ public class OrderController {
     }
 
     @GetMapping("/{orderId}")
-    public SuccessResponse<OrderInfoOutPutDTO> getOrder(@AuthenticationPrincipal CustomUserDetails member,
+    public SuccessResponse<OrderInfoOutPutDTO> getOrderDetail(@AuthenticationPrincipal CustomUserDetails member,
                                                         @PathVariable Long orderId){
         Long memberId = member.getMemberId();
-
-        OrderInfoOutPutDTO response = inquiryOrderUseCase.getOrder(memberId,orderId);
+        OrderInfoOutPutDTO response = inquiryOrderUseCase.getOrderDetail(memberId,orderId);
 
         return SuccessResponse.success(response);
+    }
 
+    @GetMapping("")
+    public SuccessResponse<List<OrderSummaryOutputDTO>> getOrder(@AuthenticationPrincipal CustomUserDetails member){
+
+        Long memberId = member.getMemberId();
+        List<OrderSummaryOutputDTO> response = inquiryOrderUseCase.getOrder(memberId);
+
+        return SuccessResponse.success(response);
     }
 
 }

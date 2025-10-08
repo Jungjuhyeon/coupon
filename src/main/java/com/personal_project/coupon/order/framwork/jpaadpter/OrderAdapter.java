@@ -5,6 +5,7 @@ import com.personal_project.coupon.order.domain.model.Order;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -27,5 +28,11 @@ public class OrderAdapter implements OrderOutputPort {
     public Optional<Order> findOrderDetail(Long memberId,Long orderId){
         return orderJpaRepository.findOrderDetail(memberId,orderId);
     }
+
+    @Override
+    public List<Order> findOrderDetail(Long memberId){
+        return orderJpaRepository.findOrderList(memberId);
+    }
+
 
 }
