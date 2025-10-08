@@ -4,6 +4,7 @@ import com.personal_project.coupon.coupon.domain.model.CouponIssue;
 import com.personal_project.coupon.global.entity.BaseEntity;
 import com.personal_project.coupon.member.domain.Member;
 import com.personal_project.coupon.order.domain.model.enumeration.OrderStatus;
+import com.personal_project.coupon.order.domain.model.event.OrderCreatedEvent;
 import com.personal_project.coupon.store.domain.model.Store;
 import jakarta.persistence.*;
 import lombok.*;
@@ -71,6 +72,10 @@ public class Order extends BaseEntity {
                 LocalDateTime.now(),
                 comment
         );
+    }
+
+    public static OrderCreatedEvent createOrderEvent(Long memberId,Long orderId){
+        return new OrderCreatedEvent(orderId,memberId);
     }
 
     //원가 계산로직

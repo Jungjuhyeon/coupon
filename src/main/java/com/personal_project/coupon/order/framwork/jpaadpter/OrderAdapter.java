@@ -30,8 +30,13 @@ public class OrderAdapter implements OrderOutputPort {
     }
 
     @Override
-    public List<Order> findOrderDetail(Long memberId){
+    public List<Order> findOrderList(Long memberId){
         return orderJpaRepository.findOrderList(memberId);
+    }
+
+    @Override
+    public Optional<Order> findByIdMemberId(Long orderId,Long memberId){
+        return orderJpaRepository.findOrder(memberId,orderId);
     }
 
 

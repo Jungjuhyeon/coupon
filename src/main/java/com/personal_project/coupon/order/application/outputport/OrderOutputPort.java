@@ -13,5 +13,7 @@ public interface OrderOutputPort {
 
     public Optional<Order> findOrderDetail(Long memberId,Long orderId);
 
-    public List<Order> findOrderDetail(Long memberId);
+    public List<Order> findOrderList(Long memberId);
+
+    public Optional<Order> findByIdMemberId(Long memberId,Long orderId);
 }

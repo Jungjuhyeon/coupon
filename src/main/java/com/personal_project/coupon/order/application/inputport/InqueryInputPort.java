@@ -1,13 +1,13 @@
 package com.personal_project.coupon.order.application.inputport;
 
-import com.personal_project.coupon.coupon.domain.model.enumeration.DiscountType;
 import com.personal_project.coupon.global.exception.BusinessException;
 import com.personal_project.coupon.global.exception.errorcode.CommonErrorCode;
 import com.personal_project.coupon.order.application.outputport.OrderOutputPort;
+import com.personal_project.coupon.order.application.outputport.OrderSummaryOutputPort;
 import com.personal_project.coupon.order.application.usecase.InquiryOrderUseCase;
 import com.personal_project.coupon.order.domain.model.Order;
+import com.personal_project.coupon.order.domain.model.document.OrderSummaryDocument;
 import com.personal_project.coupon.order.framwork.web.response.OrderInfoOutPutDTO;
-import com.personal_project.coupon.order.framwork.web.response.OrderSummaryOutputDTO;
 import com.personal_project.coupon.payment.application.outputport.PaymentOutputPort;
 import com.personal_project.coupon.payment.domain.model.Payment;
 import com.personal_project.coupon.store.domain.model.Brand;
@@ -18,16 +18,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-
 public class InqueryInputPort implements InquiryOrderUseCase {
 
     private final OrderOutputPort orderOutputPort;
     private final PaymentOutputPort paymentOutputPort;
+    private final OrderSummaryOutputPort orderSummaryOutputPort;
 
     @Override
     public OrderInfoOutPutDTO getOrderDetail(Long memberId, Long orderId){
@@ -48,24 +47,8 @@ public class InqueryInputPort implements InquiryOrderUseCase {
     }
 
     @Override
-    public List<OrderSummaryOutputDTO> getOrder(Long memberId){
-        List<Order> orderList = orderOutputPort.findOrderDetail(memberId);
-
-
-        return orderList.stream()
-                        .map(o-> {
-                            Store store = o.getStore();
-                            StoreCategory storeCategory = store.getStoreCategory();
-                            Brand brand = store.getBrand();
-                            DiscountType discountType = Optional.ofNullable(o.getCouponIssue())
-                                    .map(ci -> ci.getCoupon().getDiscountType())
-                                    .orElse(null); // 또는 기본값 지정
-
-                            return OrderSummaryOutputDTO.mapToDTO(o,storeCategory.getName(),brand.getName(),
-                                    store.getName(), discountType);
-                                }
-                        ).toList();
+    public List<OrderSummaryDocument> getOrder(Long memberId){
+        return orderSummaryOutputPort.findByMemberId(memberId);
     }
-
 
 }
