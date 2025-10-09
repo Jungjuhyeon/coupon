@@ -5,5 +5,5 @@ import com.personal_project.coupon.order.domain.model.event.OrderCreatedEvent;
 
 public interface OrderEventOutputPort {
 
-    public void occurOrderEvent(OrderCreatedEvent orderCreatedEvent)throws JsonProcessingException;
+    public void send(OrderCreatedEvent orderCreatedEvent)throws JsonProcessingException;
 }

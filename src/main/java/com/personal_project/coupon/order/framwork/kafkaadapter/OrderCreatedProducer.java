@@ -22,7 +22,7 @@ public class OrderCreatedProducer implements OrderEventOutputPort {
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
     @Override
-    public void occurOrderEvent(OrderCreatedEvent result)throws JsonProcessingException {
+    public void send(OrderCreatedEvent result)throws JsonProcessingException {
 
         CompletableFuture<SendResult<String, Object>> future = kafkaTemplate.send(TOPIC, result);
 

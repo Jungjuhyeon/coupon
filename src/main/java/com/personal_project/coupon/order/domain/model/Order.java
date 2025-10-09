@@ -74,8 +74,8 @@ public class Order extends BaseEntity {
         );
     }
 
-    public static OrderCreatedEvent createOrderEvent(Long memberId,Long orderId){
-        return new OrderCreatedEvent(orderId,memberId);
+    public static OrderCreatedEvent createOrderEvent(Long memberId,Long orderId,String eventType){
+        return new OrderCreatedEvent(orderId,memberId,eventType);
     }
 
     //원가 계산로직

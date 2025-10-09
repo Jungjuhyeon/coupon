@@ -25,6 +25,7 @@ import com.personal_project.coupon.store.application.outputport.StoreOutputPort;
 import com.personal_project.coupon.store.domain.model.Menu;
 import com.personal_project.coupon.store.domain.model.Store;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,6 +49,7 @@ public class AddOrderInputPort implements AddOrderUseCase {
     private final OrderOutputPort orderOutputPort;
     private final PaymentOutputPort paymentOutputPort;
     private final OrderEventOutputPort orderEventOutputPort;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Override
     @Transactional
@@ -89,8 +91,8 @@ public class AddOrderInputPort implements AddOrderUseCase {
         paymentOutputPort.save(Payment.create(order,order.getFinalPrice()));
 
         //이벤트 발행
-        OrderCreatedEvent orderCreatedEvent = createOrderEvent(memberId,order.getId());
-        orderEventOutputPort.occurOrderEvent(orderCreatedEvent);
+        OrderCreatedEvent orderCreatedEvent = createOrderEvent(memberId,order.getId(),"Order_Created");
+        eventPublisher.publishEvent(orderCreatedEvent);
 
         return OrderOutputDTO.mapToDTO(order.getId());
     }
