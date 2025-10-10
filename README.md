@@ -12,6 +12,7 @@
     * 예시: 쿠폰의 최대 발행 수량은 하루에 5000개입니다.
 5. 쿠폰은 이벤트 기간 종료 후 특정 기간 동안만 사용 가능합니다.
     * 예시: 이벤트 기간 종료 후 50% 할인 쿠폰은 1달 이내에 사용되어야 합니다
+  
 [주문 시스템]
 1. 가게등록
 2. 메뉴등록
@@ -22,6 +23,10 @@
 
 # ERD
 <img width="2000" height="1692" alt="image" src="https://github.com/user-attachments/assets/b182ddb9-6e35-4080-aa4a-57629cb0ebf1" />
+
+# 시스템 아키텍처
+<img width="1401" height="757" alt="image" src="https://github.com/user-attachments/assets/21cf8630-811a-42d0-81ea-258c4813017a" />
+
 
 ## Commit Convention
 
