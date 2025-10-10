@@ -14,7 +14,7 @@
     * 예시: 이벤트 기간 종료 후 50% 할인 쿠폰은 1달 이내에 사용되어야 합니다
 
 # ERD
- <img width="1460" height="2042" alt="image" src="https://github.com/user-attachments/assets/9db7852a-995c-4535-9d39-226c688a04cd" />
+<img width="2000" height="1692" alt="image" src="https://github.com/user-attachments/assets/b182ddb9-6e35-4080-aa4a-57629cb0ebf1" />
 
 ## Commit Convention
 
