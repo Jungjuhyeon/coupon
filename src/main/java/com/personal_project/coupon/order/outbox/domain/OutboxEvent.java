@@ -1,6 +1,6 @@
-package com.personal_project.coupon.order.domain.outbox;
+package com.personal_project.coupon.order.outbox.domain;
 
-import com.personal_project.coupon.order.domain.model.enumeration.OrderOutboxStatus;
+import com.personal_project.coupon.order.outbox.domain.enumeration.OutboxEventStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,12 +10,12 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "order_outbox")
+@Table(name = "outbox_event")
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class OrderOutbox {
+public class OutboxEvent {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,11 +29,12 @@ public class OrderOutbox {
     private String payload;
 
     private LocalDateTime createdAt;
-    @Enumerated(EnumType.STRING)
-    private OrderOutboxStatus status;
 
-    private OrderOutbox(String aggregateType,Long aggregateId,String eventType,String payload,
-                        LocalDateTime createdAt,OrderOutboxStatus status){
+    @Enumerated(EnumType.STRING)
+    private OutboxEventStatus status;
+
+    private OutboxEvent(String aggregateType, Long aggregateId, String eventType, String payload,
+                        LocalDateTime createdAt, OutboxEventStatus status){
         this.aggregateType = aggregateType;
         this.aggregateId = aggregateId;
         this.eventType = eventType;
@@ -41,20 +42,20 @@ public class OrderOutbox {
         this.createdAt = createdAt;
         this.status = status;
     }
-    public static OrderOutbox create(Long orderId,String eventType,String payload){
-        return new OrderOutbox("Order", orderId, eventType, payload, LocalDateTime.now(), OrderOutboxStatus.READY_TO_PUBLISH);
+    public static OutboxEvent create(String aggregateType,Long aggregateId, String eventType, String payload){
+        return new OutboxEvent(aggregateType, aggregateId, eventType, payload, LocalDateTime.now(), OutboxEventStatus.READY_TO_PUBLISH);
     }
 
     public void markOutboxEventPending(){
-        this.status = OrderOutboxStatus.PUBLISHED;
+        this.status = OutboxEventStatus.PUBLISHED;
     }
 
     public void markOutboxEventFailed(){
-        this.status = OrderOutboxStatus.FAILED;
+        this.status = OutboxEventStatus.FAILED;
     }
 
     public void markOutboxEventProcessed(){
-        this.status = OrderOutboxStatus.MESSAGE_CONSUME;
+        this.status = OutboxEventStatus.MESSAGE_CONSUME;
     }
 
 }

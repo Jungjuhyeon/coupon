@@ -43,7 +43,7 @@ public class Coupon extends BaseEntity {
     private LocalDateTime usageEndDateTime; //쿠폰 사용 가능 종료 시간
 
     @Enumerated(EnumType.STRING)
-    private CouponStatus Couponstatus; //발급전 , 발급됨
+    private CouponStatus couponstatus; //발급전 , 발급됨
 
     private Coupon(Promotion promotion,DiscountType discountType,Integer discountValue, Integer maxQuantity,
                    LocalDate startDate, LocalDate endDate, LocalDateTime usageStartDateTime, LocalDateTime usageEndDateTime){
@@ -55,7 +55,7 @@ public class Coupon extends BaseEntity {
         this.endDate = endDate;
         this.usageStartDateTime = usageStartDateTime;
         this.usageEndDateTime = usageEndDateTime;
-        this.Couponstatus = CouponStatus.ISSUED;
+        this.couponstatus = CouponStatus.ISSUED;
     }
     public static Coupon create(Promotion promotion, CouponInfoDTO couponInfoDTO){
         return new Coupon(promotion,couponInfoDTO.getDiscountType(),couponInfoDTO.getDiscountValue(),

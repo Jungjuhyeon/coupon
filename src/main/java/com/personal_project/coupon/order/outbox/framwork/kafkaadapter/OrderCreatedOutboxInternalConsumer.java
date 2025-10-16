@@ -1,14 +1,13 @@
-package com.personal_project.coupon.order.framwork.kafkaadapter;
+package com.personal_project.coupon.order.outbox.framwork.kafkaadapter;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.personal_project.coupon.order.application.usecase.OrderOutboxUseCase;
+import com.personal_project.coupon.order.outbox.application.usecase.OutboxUseCase;
 import com.personal_project.coupon.order.domain.model.event.OrderCreatedEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -19,7 +18,7 @@ import java.io.IOException;
 public class OrderCreatedOutboxInternalConsumer {
 
     private final ObjectMapper objectMapper;
-    private final OrderOutboxUseCase orderOutboxUseCase;
+    private final OutboxUseCase outboxUseCase;
 
 
     @KafkaListener(topics = "${kafka.consumer.topic3.name}", groupId = "${kafka.consumer.topic3.groupid2}")
@@ -27,9 +26,8 @@ public class OrderCreatedOutboxInternalConsumer {
         log.info("[Outbox] - 내부 리스너 동작");
         String jsonValue = record.value();
         OrderCreatedEvent event = objectMapper.readValue(jsonValue, OrderCreatedEvent.class);
-
         //발행성공 상태 변경
-        orderOutboxUseCase.markOutboxEventProcessed(event);
+        outboxUseCase.markOutboxEventProcessed(event.getOrderId(),event.getEventType());
 
     }
 }

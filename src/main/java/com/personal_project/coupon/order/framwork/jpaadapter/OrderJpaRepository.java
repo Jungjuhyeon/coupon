@@ -1,4 +1,4 @@
-package com.personal_project.coupon.order.framwork.jpaadpter;
+package com.personal_project.coupon.order.framwork.jpaadapter;
 
 import com.personal_project.coupon.order.domain.model.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
