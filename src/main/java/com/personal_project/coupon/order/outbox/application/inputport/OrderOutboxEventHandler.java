@@ -1,4 +1,4 @@
-package com.personal_project.coupon.order.outbox.application;
+package com.personal_project.coupon.order.outbox.application.inputport;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.personal_project.coupon.order.outbox.application.outputport.OutboxOutputPort;
@@ -15,7 +15,7 @@ public class OrderOutboxEventHandler {
     private final OutboxOutputPort outboxOutputPort;
 
     @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
-    public void handleBeforeCommit(OutboxEvent event) throws JsonProcessingException {
+    public void handleOutboxEvent(OutboxEvent event) throws JsonProcessingException {
         log.info("[Outbox] BEFORE_COMMIT - 저장");
 
         outboxOutputPort.save(event); // 같은 트랜잭션 내에서 저장됨

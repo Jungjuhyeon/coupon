@@ -52,7 +52,7 @@ public class AddOrderInputPort implements AddOrderUseCase {
     private final ApplicationEventPublisher eventPublisher;
     private final ObjectMapper objectMapper;
 
-    private final String eventType = "Order_Created";
+    private final String eventType = "OrderCreated";
     private final String aggregateType = "Order";
 
 
@@ -103,7 +103,6 @@ public class AddOrderInputPort implements AddOrderUseCase {
 
         //이벤트 발행
         eventPublisher.publishEvent(outboxEvent);
-
 
         return OrderOutputDTO.mapToDTO(order.getId());
     }
