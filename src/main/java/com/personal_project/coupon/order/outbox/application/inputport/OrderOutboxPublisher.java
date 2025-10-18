@@ -32,21 +32,24 @@ public class OrderOutboxPublisher {
 
         outboxOutputPort.findByAggregateIdAndEventType(outboxEvent.getAggregateId(), outboxEvent.getEventType())
                 .ifPresent(outbox -> {
-                    try {
-                        // 해당 eventType을 처리할 Sender 찾기
-                        senders.stream()
-                                .filter(sender -> sender.supports(outbox.getEventType()))
-                                .findFirst()
-                                .ifPresent(sender -> sender.send(outbox.getPayload()));
-
-                        outbox.markOutboxEventPending();
-                        outboxOutputPort.save(outbox);
-                        log.info("[Outbox] PUBLISHED로 수정완료");
-                    } catch (Exception e) {
-                        log.error("[Outbox] 이벤트 발행 실패 - aggregateId={}, reason={}", outboxEvent.getAggregateId(), e.getMessage(), e);
-                        outbox.markOutboxEventFailed();
-                        outboxOutputPort.save(outbox);
-                    }
+                    senders.stream()
+                            .filter(sender -> sender.supports(outbox.getEventType()))
+                            .findFirst()
+                            .ifPresent(sender ->
+                                    sender.send(outbox.getPayload())
+                                            .thenAccept(sendResult -> {
+                                                outbox.markOutboxEventPending();
+                                                outboxOutputPort.save(outbox);
+                                                log.info("[Outbox] Kafka 발행 성공 - 상태 PUBLISHED");
+                                            })
+                                            .exceptionally(ex -> {
+                                                outbox.markOutboxEventFailed();
+                                                outboxOutputPort.save(outbox);
+                                                log.error("[Outbox] Kafka 발행 실패 - aggregateId={}, reason={}",
+                                                        outbox.getAggregateId(), ex.getMessage(), ex);
+                                                return null;
+                                            })
+                            );
                 });
     }
 }

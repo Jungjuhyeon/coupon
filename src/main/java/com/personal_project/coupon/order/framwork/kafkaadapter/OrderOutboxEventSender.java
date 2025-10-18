@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.CompletableFuture;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -22,14 +24,15 @@ public class OrderOutboxEventSender implements OutboxEventSender {
     }
 
     @Override
-    public void send(String payload) {
+    public CompletableFuture<?> send(String payload) {
         try {
             OrderCreatedEvent event = objectMapper.readValue(payload, OrderCreatedEvent.class);
-            orderEventOutputPort.send(event);
-            log.info("[OrderOutboxSender] OrderCreated 이벤트 발행 완료");
+            return orderEventOutputPort.send(event); // send()가 CompletableFuture 반환
+
         } catch (Exception e) {
-            log.error("[OrderOutboxSender] OrderCreated 이벤트 발행 실패", e);
-            throw new RuntimeException(e);
+            CompletableFuture<Void> failedFuture = new CompletableFuture<>();
+            failedFuture.completeExceptionally(e);
+            return failedFuture;
         }
     }
 }
