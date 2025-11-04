@@ -2,9 +2,11 @@ package com.personal_project.coupon.order.outbox.framwork.jpaadapter;
 
 import com.personal_project.coupon.order.outbox.application.outputport.OutboxOutputPort;
 import com.personal_project.coupon.order.outbox.domain.OutboxEvent;
+import com.personal_project.coupon.order.outbox.domain.enumeration.OutboxEventStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -21,5 +23,10 @@ public class OutboxAdapter implements OutboxOutputPort {
     @Override
     public Optional<OutboxEvent> findByAggregateIdAndEventType(Long aggregateId, String eventType){
         return outboxJpaRepository.findByAggregateIdAndEventType(aggregateId,eventType);
+    }
+
+    @Override
+    public List<OutboxEvent> findByStatusIn(List<OutboxEventStatus> list){
+        return outboxJpaRepository.findByStatusIn(list);
     }
 }
