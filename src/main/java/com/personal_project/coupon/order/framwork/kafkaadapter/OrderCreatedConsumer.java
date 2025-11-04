@@ -33,9 +33,9 @@ public class OrderCreatedConsumer {
     private final ObjectMapper objectMapper;
 
 
-    @KafkaListener(topics = "${kafka.consumer.topic3.name}", groupId = "${kafka.consumer.topic3.groupid}")
+    @KafkaListener(topics = "${kafka.consumer.topic3.name}", groupId = "${kafka.consumer.topic3.groupid1}")
     public void consumeOrderCreated(ConsumerRecord<String, String> record) throws IOException {
-        System.out.println("issue:" + record.value());
+        log.info("issue:" + record.value());
 
         OrderCreatedEvent orderCreatedEvent = objectMapper.readValue(record.value(),OrderCreatedEvent.class);
 

@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class OrderCreatedEvent {
     private Long orderId;
     private Long memberId;
+    private String eventType;
 }

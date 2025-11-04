@@ -1,4 +1,4 @@
-package com.personal_project.coupon.order.framwork.jpaadpter;
+package com.personal_project.coupon.order.framwork.jpaadapter;
 
 import com.personal_project.coupon.order.application.outputport.OrderOutputPort;
 import com.personal_project.coupon.order.domain.model.Order;

@@ -2,6 +2,7 @@ package com.personal_project.coupon.order.application.inputport;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.personal_project.coupon.coupon.application.outputport.CouponIssueOutputPort;
 import com.personal_project.coupon.coupon.domain.model.CouponIssue;
 import com.personal_project.coupon.coupon.domain.model.enumeration.CouponIssueStatus;
@@ -9,7 +10,6 @@ import com.personal_project.coupon.global.exception.BusinessException;
 import com.personal_project.coupon.global.exception.errorcode.CommonErrorCode;
 import com.personal_project.coupon.member.applicaion.outputport.MemberOutputPort;
 import com.personal_project.coupon.member.domain.Member;
-import com.personal_project.coupon.order.application.outputport.OrderEventOutputPort;
 import com.personal_project.coupon.order.application.outputport.OrderOutputPort;
 import com.personal_project.coupon.order.application.usecase.AddOrderUseCase;
 import com.personal_project.coupon.order.domain.model.Order;
@@ -18,6 +18,7 @@ import com.personal_project.coupon.order.domain.model.event.OrderCreatedEvent;
 import com.personal_project.coupon.order.framwork.web.request.OrderInputDTO;
 import com.personal_project.coupon.order.framwork.web.request.OrderMenuInfoDTO;
 import com.personal_project.coupon.order.framwork.web.response.OrderOutputDTO;
+import com.personal_project.coupon.order.outbox.domain.OutboxEvent;
 import com.personal_project.coupon.payment.application.outputport.PaymentOutputPort;
 import com.personal_project.coupon.payment.domain.model.Payment;
 import com.personal_project.coupon.store.application.outputport.MenuOutputPort;
@@ -25,6 +26,7 @@ import com.personal_project.coupon.store.application.outputport.StoreOutputPort;
 import com.personal_project.coupon.store.domain.model.Menu;
 import com.personal_project.coupon.store.domain.model.Store;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,7 +49,12 @@ public class AddOrderInputPort implements AddOrderUseCase {
     private final MenuOutputPort menuOutputPort;
     private final OrderOutputPort orderOutputPort;
     private final PaymentOutputPort paymentOutputPort;
-    private final OrderEventOutputPort orderEventOutputPort;
+    private final ApplicationEventPublisher eventPublisher;
+    private final ObjectMapper objectMapper;
+
+    private final String eventType = "OrderCreated";
+    private final String aggregateType = "Order";
+
 
     @Override
     @Transactional
@@ -88,9 +95,14 @@ public class AddOrderInputPort implements AddOrderUseCase {
 
         paymentOutputPort.save(Payment.create(order,order.getFinalPrice()));
 
+        //이벤트 생성
+        OrderCreatedEvent orderCreatedEvent = createOrderEvent(memberId,order.getId(),eventType);
+
+        String payload = objectMapper.writeValueAsString(orderCreatedEvent);
+        OutboxEvent outboxEvent = OutboxEvent.create(aggregateType,orderCreatedEvent.getOrderId(),orderCreatedEvent.getEventType(),payload);
+
         //이벤트 발행
-        OrderCreatedEvent orderCreatedEvent = createOrderEvent(memberId,order.getId());
-        orderEventOutputPort.occurOrderEvent(orderCreatedEvent);
+        eventPublisher.publishEvent(outboxEvent);
 
         return OrderOutputDTO.mapToDTO(order.getId());
     }
