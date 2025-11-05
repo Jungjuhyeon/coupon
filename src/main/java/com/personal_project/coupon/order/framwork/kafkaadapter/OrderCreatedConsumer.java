@@ -1,6 +1,7 @@
 package com.personal_project.coupon.order.framwork.kafkaadapter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.dao.DuplicateKeyException;
 import com.personal_project.coupon.coupon.domain.model.enumeration.DiscountType;
 import com.personal_project.coupon.global.exception.BusinessException;
 import com.personal_project.coupon.global.exception.errorcode.CommonErrorCode;
@@ -56,7 +57,10 @@ public class OrderCreatedConsumer {
                         storeCategory.getName(),
                         brand.getName(),store.getName(), discountType);
 
-        orderSummaryOutputPort.save(orderSummaryDocument);
-
+        try {
+            orderSummaryOutputPort.save(orderSummaryDocument);
+        }catch (DuplicateKeyException e) {
+            log.warn(" 중복 이벤트 감지 - 저장 생략 ");
+        }
     }
 }

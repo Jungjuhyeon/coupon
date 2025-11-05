@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
@@ -19,7 +20,10 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @NoArgsConstructor
 @Document(collection = "orders_summaries") // MongoDB 컬렉션 이름
-@CompoundIndex(def = "{'memberId': 1, 'orderTime': -1}")
+@CompoundIndexes({ // 여러 복합 인덱스를 선언할 땐 @CompoundIndexes 사용
+        @CompoundIndex(def = "{'memberId': 1, 'orderTime': -1}"),
+        @CompoundIndex(name = "unique_order_idx", def = "{'orderId': 1}", unique = true)
+})
 public class OrderSummaryDocument {
 
     @Id
