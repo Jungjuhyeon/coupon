@@ -27,6 +27,9 @@
 # 시스템 아키텍처
 <img width="1401" height="757" alt="image" src="https://github.com/user-attachments/assets/21cf8630-811a-42d0-81ea-258c4813017a" />
 
+## 트러블 슈팅
+
+[@TransactionalEventListener(AFTER_COMMIT) 에서 왜 Update가 되지않는걸까?](https://velog.io/@wngus4278/Spring-TransactionalEventListenerAFTERCOMMIT-%EC%97%90%EC%84%9C-%EC%99%9C-Update%EA%B0%80-%EB%90%98%EC%A7%80%EC%95%8A%EB%8A%94%EA%B1%B8%EA%B9%8C)
 
 ## Commit Convention
 
