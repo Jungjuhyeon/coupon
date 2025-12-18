@@ -29,7 +29,8 @@
 
 ## 트러블 슈팅
 
-[@TransactionalEventListener(AFTER_COMMIT) 에서 왜 Update가 되지않는걸까?](https://velog.io/@wngus4278/Spring-TransactionalEventListenerAFTERCOMMIT-%EC%97%90%EC%84%9C-%EC%99%9C-Update%EA%B0%80-%EB%90%98%EC%A7%80%EC%95%8A%EB%8A%94%EA%B1%B8%EA%B9%8C)
+- [@TransactionalEventListener(AFTER_COMMIT) 에서 왜 Update가 되지않는걸까?](https://velog.io/@wngus4278/Spring-TransactionalEventListenerAFTERCOMMIT-%EC%97%90%EC%84%9C-%EC%99%9C-Update%EA%B0%80-%EB%90%98%EC%A7%80%EC%95%8A%EB%8A%94%EA%B1%B8%EA%B9%8C)
+- [Bulk Insert시 JPA의 IDENTITY 문제](https://velog.io/@wngus4278/Kafka-%EC%BB%A8%EC%8A%88%EB%A8%B8-%EB%A1%9C%EA%B7%B8-%EC%B2%98%EB%A6%AC-%EC%84%B1%EB%8A%A5-%EA%B0%9C%EC%84%A0%EA%B8%B0-Bulk-Insert%EC%8B%9C-JPA%EC%9D%98-IDENTITY-%EB%AC%B8%EC%A0%9C)
 
 ## Commit Convention
 
