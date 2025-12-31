@@ -1,10 +1,7 @@
 package com.example.couponserver.coupon.config.security;
 
-import com.example.common.global.security.JwtAuthenticationProvider;
-import com.example.common.global.security.JwtTokenProvider;
+import com.example.couponserver.coupon.auth.AuthenticationContextFilter;
 import com.example.couponserver.coupon.auth.handler.CustomAccessDeniedHandler;
-import com.example.couponserver.coupon.auth.handler.CustomAuthenticationEntryPoint;
-import com.example.couponserver.coupon.auth.jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,34 +24,41 @@ import java.util.Arrays;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private final JwtTokenProvider jwtTokenProvider;
-    private final JwtAuthenticationProvider authenticationProvider;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
-                .httpBasic(AbstractHttpConfigurer::disable)  // 인증을 UI로 할 것이 아니라서 disable을 한 것
-                .csrf(AbstractHttpConfigurer::disable) // 토큰을 위조하는 것을 방지하기 위함. 하지만 restful api에선 필요 업음.
-                .cors(Customizer.withDefaults()) // CORS
+                .httpBasic(AbstractHttpConfigurer::disable)
+                .csrf(AbstractHttpConfigurer::disable) // Stateless JWT는 반드시 disable
+                .cors(Customizer.withDefaults())
                 .formLogin(AbstractHttpConfigurer::disable)
+
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/v1/**").permitAll()
+                        .requestMatchers("/api/v1/coupons/**").permitAll()
+                        .requestMatchers("/internal/coupon-issues/**").permitAll()
+                        .requestMatchers("/api/v1/coupons/**").permitAll()
+                        .requestMatchers("/internal/promotions/**").permitAll()
                         .requestMatchers("/**").permitAll()
-                        .anyRequest().authenticated())
+                        .anyRequest().authenticated()
+                )
 
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                // JWT Filter 를 필터체인에 끼워넣어줌
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider,authenticationProvider), UsernamePasswordAuthenticationFilter.class)
+                .sessionManagement(session ->
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
+                .addFilterBefore(
+                        new AuthenticationContextFilter(),
+                        UsernamePasswordAuthenticationFilter.class
+                )
                 .exceptionHandling(e -> e
-                        .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
-                        .accessDeniedHandler(new CustomAccessDeniedHandler()))
+                        .accessDeniedHandler(new CustomAccessDeniedHandler())
+                )
                 .build();
-
     }
+
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
-
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();

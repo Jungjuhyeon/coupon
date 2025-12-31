@@ -1,7 +1,7 @@
 package com.example.orderserver.order.auth.handler;
 
 import com.example.common.global.exception.errorcode.CommonErrorCode;
-import com.example.orderserver.order.auth.jwt.JwtAuthenticationFilter;
+import com.example.orderserver.order.auth.AuthenticationContextFilter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -21,6 +21,6 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
         log.error("[ACCESS DENIED]");
-        JwtAuthenticationFilter.setErrorResponse(response, CommonErrorCode.JWT_AUTHORIZATION_FAILED);
+        AuthenticationContextFilter.setErrorResponse(response, CommonErrorCode.JWT_AUTHORIZATION_FAILED);
     }
 }

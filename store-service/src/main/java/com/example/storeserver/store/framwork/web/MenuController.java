@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/menu")
+@RequestMapping("/api/v1/menus")
 public class MenuController {
     private final AddMenuUseCase addMenuUseCase;
 

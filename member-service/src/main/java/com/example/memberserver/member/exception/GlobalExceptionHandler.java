@@ -1,5 +1,4 @@
-package com.example.common.global.exception.handler;
-
+package com.example.memberserver.member.exception;
 
 import com.example.common.global.exception.BusinessException;
 import com.example.common.global.exception.errorcode.CommonErrorCode;

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/store")
+@RequestMapping("/api/v1/stores")
 public class StoreController {
     private final AddStoreUseCase addStoreUsecase;
     private final InquiryStoreUseCase inquiryStoreUsecase;

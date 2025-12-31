@@ -1,9 +1,7 @@
 package com.example.common.global.exception.errorcode;
 
-import org.springframework.http.HttpStatus;
-
 public interface ErrorCode {
-    HttpStatus getHttpStatus();
+    Integer getHttpStatus();
     String getCode();
     String getMessage();
 }
