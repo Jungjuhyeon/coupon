@@ -5,4 +5,5 @@ include 'member-service'
 include 'order-service'
 include 'payment-service'
 include 'store-service'
+include 'discovery-server'
 
