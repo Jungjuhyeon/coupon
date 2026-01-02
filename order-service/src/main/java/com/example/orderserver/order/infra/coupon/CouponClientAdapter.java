@@ -16,7 +16,7 @@ public class CouponClientAdapter implements CouponOutputPort {
     public CouponIssueInfoFeignDTO getCouponIssueInfo(Long couponIssueId){
         try {
             return couponFeignClient.getCouponIssue(couponIssueId);
-        } catch (FeignException.NotFound e) {
+        } catch (FeignException e) {
             throw new BusinessException(OrderErrorCode.ORDER_PRECONDITION_FAILED);
         }
     }

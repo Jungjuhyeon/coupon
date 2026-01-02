@@ -34,8 +34,6 @@ public class OrderCreatedConsumer {
     private final StoreOutputPort storeOutputPort;
 
     private final OrderSummaryAssembler orderSummaryAssembler;
-
-
     @KafkaListener(topics = "${kafka.consumer.topic3.name}", groupId = "${kafka.consumer.topic3.groupid1}")
     public void consumeOrderCreated(ConsumerRecord<String, String> record) throws IOException {
         log.info("issue:" + record.value());
@@ -51,10 +49,6 @@ public class OrderCreatedConsumer {
 
         OrderSummaryDocument document =
                 orderSummaryAssembler.assemble(order, orderCreatedEvent.getMemberId(), storeOrderView);
-
-        //        DiscountType discountType = Optional.ofNullable(order.getCouponIssue())
-//                .map(ci -> ci.getCoupon().getDiscountType())
-//                .orElse(null); // 또는 기본값 지정
 
         try {
             orderSummaryOutputPort.save(document);

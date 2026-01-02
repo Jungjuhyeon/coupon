@@ -88,7 +88,7 @@ public class AddOrderInputPort implements AddOrderUseCase {
 
     private void publishOrderCreatedEvent(Order order, Long memberId) throws JsonProcessingException {
 
-        OrderCreatedEvent event = createOrderEvent(memberId, order.getId(), eventType);
+        OrderCreatedEvent event = createOrderEvent(memberId, order.getId(),order.getCouponIssueId(), eventType);
 
         String payload = objectMapper.writeValueAsString(event);
 

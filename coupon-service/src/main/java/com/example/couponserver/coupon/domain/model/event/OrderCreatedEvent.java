@@ -1,4 +1,4 @@
-package com.example.orderserver.order.domain.model.event;
+package com.example.couponserver.coupon.domain.model.event;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

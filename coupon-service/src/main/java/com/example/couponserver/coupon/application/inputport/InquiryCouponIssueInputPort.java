@@ -9,11 +9,13 @@ import com.example.couponserver.coupon.framwork.web.response.CouponIssueOrderFei
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
 @Slf4j
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 @Service
 public class InquiryCouponIssueInputPort implements InquiryCouponIssueUseCase {
     private final CouponIssueOutputPort couponIssueOutputPort;

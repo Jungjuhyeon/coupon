@@ -61,8 +61,8 @@ public class Order extends BaseEntity {
         return new Order(memberId, storeId, deliveryAddress, LocalDateTime.now(), comment);
     }
 
-    public static OrderCreatedEvent createOrderEvent(Long memberId, Long orderId, String eventType){
-        return new OrderCreatedEvent(orderId,memberId,eventType);
+    public static OrderCreatedEvent createOrderEvent(Long memberId, Long orderId,Long couponIssueId, String eventType){
+        return new OrderCreatedEvent(orderId,memberId,couponIssueId,eventType);
     }
 
     // 쿠폰 있는 경우 가격 확정
