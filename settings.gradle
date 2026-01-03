@@ -1,1 +1,12 @@
 rootProject.name = 'coupon'
+include 'common'
+include 'coupon-service'
+include 'member-service'
+include 'order-service'
+include 'payment-service'
+include 'store-service'
+include 'discovery-server'
+include 'api-gateway'
+
+
+

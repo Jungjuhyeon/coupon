@@ -1,62 +1,86 @@
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '3.4.3'
+	id 'org.springframework.boot' version '3.2.6'
 	id 'io.spring.dependency-management' version '1.1.7'
 }
 
 group = 'com.personal_project'
 version = '0.0.1-SNAPSHOT'
 
-java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(17)
+allprojects {
+	version = '0.0.1-SNAPSHOT'
+
+	repositories {
+		mavenCentral()
 	}
 }
 
-configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
+subprojects {
+	group = 'com.personal_project'
+
+	apply plugin: 'java'
+	apply plugin: 'org.springframework.boot'
+	apply plugin: 'io.spring.dependency-management'
+	apply plugin: 'java-test-fixtures'
+
+	java {
+		toolchain {
+			languageVersion = JavaLanguageVersion.of(17)
+		}
+	}
+
+
+	configurations {
+		compileOnly {
+			extendsFrom annotationProcessor
+		}
+	}
+	ext {
+		set('springCloudVersion', "2023.0.0")
+	}
+
+	dependencyManagement {
+		imports {
+			mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+		}
+	}
+
+	dependencies {
+	}
+
+	bootJar { enabled = false }
+	jar { enabled = true }
+
+	tasks.named('test') {
+		useJUnitPlatform()
+	}
+}
+project(':member-service') {
+	dependencies {
+		implementation project(':common')
 	}
 }
 
-repositories {
-	mavenCentral()
+project(':store-service') {
+	dependencies {
+		implementation project(':common')
+	}
 }
 
-dependencies {
-
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-
-	compileOnly 'org.projectlombok:lombok'
-	runtimeOnly 'com.mysql:mysql-connector-j'
-	annotationProcessor 'org.projectlombok:lombok'
-	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
-
-	implementation 'com.auth0:java-jwt:4.4.0'
-
-	//redis
-	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-	implementation 'org.redisson:redisson-spring-boot-starter:3.17.7'
-
-	//유효성
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
-
-	//kafka
-	implementation 'org.springframework.kafka:spring-kafka'
-	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.18.2'
-
-
-	//prometheus
-	implementation 'org.springframework.boot:spring-boot-starter-actuator'
-	runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
-
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.springframework.security:spring-security-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+project(':coupon-service') {
+	dependencies {
+		implementation project(':common')
+	}
 }
 
-tasks.named('test') {
-	useJUnitPlatform()
+project(':order-service') {
+	dependencies {
+		implementation project(':common')
+	}
+}
+
+project(':payment-service') {
+	dependencies {
+		implementation project(':common')
+	}
 }
