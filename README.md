@@ -25,7 +25,7 @@
 <img width="2000" height="1692" alt="image" src="https://github.com/user-attachments/assets/b182ddb9-6e35-4080-aa4a-57629cb0ebf1" />
 
 # 시스템 아키텍처
-<img width="936" height="811" alt="image" src="https://github.com/user-attachments/assets/0c35e4aa-748c-4026-9c8b-d702c4e1a467" />
+<img width="821" height="768" alt="image" src="https://github.com/user-attachments/assets/e1257055-49cc-45e9-b1a7-10739f525677" />
 
 ## 트러블 슈팅
 
