@@ -6,6 +6,7 @@ import com.example.orderserver.order.exception.OrderErrorCode;
 import com.example.orderserver.order.infra.store.dto.response.MenuInfoFeignDTO;
 import com.example.orderserver.order.infra.store.dto.response.StoreOrderViewFeignDTO;
 import feign.FeignException;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +20,7 @@ public class StoreClientAdapter implements StoreOutputPort {
     public void validateStore(Long storeId){
         try{
             storeFeignClient.validateStore(storeId);
-        } catch (FeignException.NotFound e) {
+        } catch (FeignException e) {
             throw new BusinessException(OrderErrorCode.ORDER_PRECONDITION_FAILED);
         }
     }
@@ -27,15 +28,31 @@ public class StoreClientAdapter implements StoreOutputPort {
     public List<MenuInfoFeignDTO> getMenuInfoList(List<Long>couponIssueIdList){
         try{
             return storeFeignClient.getMenus(couponIssueIdList);
-        } catch (FeignException.NotFound e) {
+        } catch (FeignException e) {
             throw new BusinessException(OrderErrorCode.ORDER_PRECONDITION_FAILED);
         }
     }
     @Override
+    @CircuitBreaker(
+            name = "order-circuit-breaker",
+            fallbackMethod = "getStoreOrderViewFallback"
+    )
     public StoreOrderViewFeignDTO getStoreOrderView(Long storeId, List<Long> menuIds){
         try{
             return storeFeignClient.getStoreOrderView(storeId,menuIds);
-        } catch (FeignException.NotFound e) {
+        } catch (FeignException e) {
+            throw new BusinessException(OrderErrorCode.ORDER_VIEW_RESOURCE_NOT_FOUND);
+        }
+    }
+    private StoreOrderViewFeignDTO getStoreOrderViewFallback(Long storeId, List<Long> menuIds, Throwable t) {
+        return new StoreOrderViewFeignDTO("알 수 없음", null, null, List.of());
+    }
+
+    @Override
+    public StoreOrderViewFeignDTO getStoreOrderViewForProjection(Long storeId, List<Long> menuIds) {
+        try{
+            return storeFeignClient.getStoreOrderView(storeId,menuIds);
+        } catch (FeignException e) {
             throw new BusinessException(OrderErrorCode.ORDER_VIEW_RESOURCE_NOT_FOUND);
         }
     }
