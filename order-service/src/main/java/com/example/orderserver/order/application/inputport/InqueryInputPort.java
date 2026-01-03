@@ -26,7 +26,6 @@ public class InqueryInputPort implements InquiryOrderUseCase {
     private final OrderOutputPort orderOutputPort;
     private final StoreOutputPort storeOutputPort;
     private final OrderDetailAssembler orderDetailAssembler;
-//    private final PaymentOutputPort paymentOutputPort;
     private final OrderSummaryOutputPort orderSummaryOutputPort;
 
     @Override

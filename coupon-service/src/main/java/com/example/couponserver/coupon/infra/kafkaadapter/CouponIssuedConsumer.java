@@ -16,6 +16,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.annotation.RetryableTopic;
+import org.springframework.retry.annotation.Backoff;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +41,13 @@ public class CouponIssuedConsumer {
     private final List<CouponIssueLog> buffer = Collections.synchronizedList(new ArrayList<>());
 
     @KafkaListener(topics = "${kafka.consumer.topic1.name}", groupId = "${kafka.consumer.topic1.groupid}")
+    @RetryableTopic(
+            // 총 시도 횟수 (최초 시도 1회 + 재시도 4회)
+            attempts = "5",
+            // 재시도 간격 (1000ms -> 2000ms -> 4000ms -> 8000ms 순으로 재시도 시간이 증가)
+            backoff = @Backoff(delay = 1000, multiplier = 2),
+            dltTopicSuffix = ".dlt"
+    )
     public void consumeIssue(ConsumerRecord<String,String> record) throws IOException{
         System.out.println("issue:" + record.value());
 

@@ -17,6 +17,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.annotation.RetryableTopic;
+import org.springframework.retry.annotation.Backoff;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +37,13 @@ public class OrderCreatedConsumer {
 
     private final OrderSummaryAssembler orderSummaryAssembler;
     @KafkaListener(topics = "${kafka.consumer.topic3.name}", groupId = "${kafka.consumer.topic3.groupid1}")
+    @RetryableTopic(
+            // 총 시도 횟수 (최초 시도 1회 + 재시도 4회)
+            attempts = "5",
+            // 재시도 간격 (1000ms -> 2000ms -> 4000ms -> 8000ms 순으로 재시도 시간이 증가한다.)
+            backoff = @Backoff(delay = 1000, multiplier = 2),
+            dltTopicSuffix = ".dlt"
+    )
     public void consumeOrderCreated(ConsumerRecord<String, String> record) throws IOException {
         log.info("issue:" + record.value());
 
@@ -44,7 +53,7 @@ public class OrderCreatedConsumer {
                 .orElseThrow(()-> new BusinessException(OrderErrorCode.ORDER_NOT_FOUND));
 
         StoreOrderViewFeignDTO storeOrderView =
-                storeOutputPort.getStoreOrderView(order.getStoreId(), order.getOrderMenuList().stream()
+                storeOutputPort.getStoreOrderViewForProjection(order.getStoreId(), order.getOrderMenuList().stream()
                         .map(OrderMenu::getMenuId).toList());
 
         OrderSummaryDocument document =
