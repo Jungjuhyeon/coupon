@@ -1,0 +1,81 @@
+server:
+  port: 9001
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: member-api
+          uri: lb://MEMBERSERVER
+          predicates:
+            - Path=/api/v1/members/**
+
+        - id: member-internal
+          uri: lb://MEMBERSERVER
+          predicates:
+            - Path=/internal/members/**
+
+        # ===============================
+        # COUPON SERVICE
+        # ===============================
+        - id: coupon-api
+          uri: lb://COUPONSERVER
+          predicates:
+            - Path=/api/v1/coupons/**,/api/v1/promotions/**
+
+
+        - id: coupon-internal
+          uri: lb://COUPONSERVER
+          predicates:
+            - Path=/internal/coupon-issues/**
+
+        # ===============================
+        # STORE SERVICE
+        # ===============================
+        - id: store-api
+          uri: lb://STORESERVER
+          predicates:
+            - Path=/api/v1/menus/**,/api/v1/stores/**
+
+        - id: store-internal
+          uri: lb://STORESERVER
+          predicates:
+            - Path=/internal/menus/**
+            - Path=/internal/stores/**
+
+        # ===============================
+        # ORDER SERVICE
+        # ===============================
+        - id: order-api
+          uri: lb://ORDERSERVER
+          predicates:
+            - Path=/api/v1/orders/**
+
+        # ===============================
+        # PAYMENT SERVICE (internal only)
+        # ===============================
+        - id: payment-internal
+          uri: lb://PAYMENTSERVER
+          predicates:
+            - Path=/internal/payments/**
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    serviceUrl:
+      defaultZone: http://eureka-server:8761/eureka
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+jwt:
+  secret:
+    key: 605dce51-77ff-44a4-8977-423ec21b9e0c

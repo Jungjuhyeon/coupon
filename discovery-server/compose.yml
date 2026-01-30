@@ -1,0 +1,14 @@
+services:
+  eureka-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: eureka-server:latest
+    ports:
+      - "8761:8761"
+    networks:
+      - coupons-network
+networks:
+  coupons-network:
+    external: true
+

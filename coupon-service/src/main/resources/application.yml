@@ -1,0 +1,103 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: couponserver
+  datasource:
+    url: jdbc:mysql://coupons-mysql:3306/coupon?rewriteBatchedStatements=true
+    username: root
+    password: password123
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 55
+
+  data:
+    redis:
+      cluster:
+        nodes:
+          - redis-node-1:6379
+          - redis-node-2:6379
+          - redis-node-3:6379
+          - redis-node-4:6379
+          - redis-node-5:6379
+          - redis-node-6:6379
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        default_batch_fetch_size: 200
+    open-in-view: false
+
+  kafka:
+    bootstrap-servers: kafka-server:9092
+    consumer:
+      properties:
+        spring.json.trusted.packages: "*"
+kafka:
+  producers:
+    topic1:
+      name: coupon_issue
+    topic2:
+      name: coupon_log
+
+  consumer:
+    topic1:
+      name: coupon_issue
+      groupid: issue
+    topic2:
+      name: coupon_log
+      groupid: log
+    topic3:
+      name: orders_created
+      groupid1: coupon-service-coupon-used
+jwt:
+  secret:
+    key: 605dce51-77ff-44a4-8977-423ec21b9e0c
+
+
+logging.level:
+  org:
+  hibernate.SQL: debug
+  springFramework:
+    transaction:
+      interceptor : TRACE
+
+#management:
+#  enable:
+#    system: true    # 시스템 메트릭 활성화 (CPU, 메모리 등)
+#    jvm: true       # JVM 메트릭 활성화
+#    gc: true        # Garbage Collection 메트릭 활성화
+#  prometheus:
+#    metrics:
+#      export:
+#  endpoints:
+#    web:
+#      exposure:
+#        include: prometheus  # Prometheus 엔드포인트 노출
+#  metrics:
+#    enabled: true  # Prometheus로 메트릭을 내보내기 활성화
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    serviceUrl:
+      defaultZone: http://eureka-server:8761/eureka/
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+member:
+  service:
+    url: http://member-server:8081
+

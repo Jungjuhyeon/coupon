@@ -26,3 +26,10 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+tasks.named('jar') {
+    enabled = false  // plain jar 비활성화
+}
+
+tasks.named('bootJar') {
+    enabled = true   // bootJar 활성화
+}
