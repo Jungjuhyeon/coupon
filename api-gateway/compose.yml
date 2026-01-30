@@ -1,0 +1,13 @@
+services:
+  gateway-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 9001:9001
+    networks:
+      - coupons-network
+networks:
+  coupons-network:
+    external: true
+

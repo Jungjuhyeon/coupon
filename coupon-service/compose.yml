@@ -1,16 +1,24 @@
 services:
+  coupon-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8083:8083
+    networks:
+      - coupons-network
   # MySQL 서비스
-  my-mysql:
+  coupons-mysql:
     image: mysql:latest
-    container_name: coupon-mysql
+    container_name: coupons-mysql
     environment:
       MYSQL_ROOT_PASSWORD: password123
     ports:
       - "3309:3306"
     volumes:
-      - /Users/jeongjuhyeon/개발/docker-mysql/mysql_data_coupon:/var/lib/mysql
+      - /Users/jeongjuhyeon/개발/docker-mysql/mysql_data_coupon:/var/lib/mysqlå
     networks:
-      - coupon-network
+      - coupons-network
     restart: always
     healthcheck:
       test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
@@ -23,17 +31,17 @@ services:
     container_name: mysqld_exporter
     image: prom/mysqld-exporter
     environment:
-      - DATA_SOURCE_NAME="wngus:password123@(my-mysql:3306)/"
+      - DATA_SOURCE_NAME="wngus:password123@(coupons-mysql:3306)/"
     command:
       - "--mysqld.username=wngus:password123"
       - "--mysqld.address=my-mysql:3306"
     ports:
       - "9104:9104"
     depends_on:
-      - my-mysql
+      - coupons-mysql
     restart: unless-stopped
     networks:
-      - coupon-network  # 추가된 부분
+      - coupons-network  # 추가된 부분
 
   # Prometheus 서비스
   prometheus:
@@ -48,7 +56,7 @@ services:
     ports:
       - "9090:9090"
     networks:
-      - coupon-network
+      - coupons-network
 
   # Grafana 서비스
   grafana:
@@ -57,11 +65,12 @@ services:
     ports:
       - "3000:3000"
     networks:
-      - coupon-network
+      - coupons-network
 
 networks:
-  coupon-network:
-    driver: bridge
+  coupons-network:
+    external: true
+
 
 
 

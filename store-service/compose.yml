@@ -1,7 +1,15 @@
 
 services:
+  store-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8082:8082
+    networks:
+      - coupons-network
   # MySQL 서비스
-  my-mysql:
+  store-mysql:
     image: mysql:latest
     container_name: store-mysql
     environment:
@@ -11,7 +19,7 @@ services:
     volumes:
       - /Users/jeongjuhyeon/개발/docker-mysql/mysql_data_store:/var/lib/mysql
     networks:
-      - coupon-network
+      - coupons-network
     restart: always
     healthcheck:
       test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
@@ -20,49 +28,50 @@ services:
       start_period: 30s
       timeout: 10s
 
-  mysqld-exporter:
-    container_name: mysqld_exporter
-    image: prom/mysqld-exporter
-    environment:
-      - DATA_SOURCE_NAME="wngus:password123@(my-mysql:3306)/"
-    command:
-      - "--mysqld.username=wngus:password123"
-      - "--mysqld.address=my-mysql:3306"
-    ports:
-      - "9104:9104"
-    depends_on:
-      - my-mysql
-    restart: unless-stopped
-    networks:
-      - coupon-network  # 추가된 부분
-
-  # Prometheus 서비스
-  prometheus:
-    image: prom/prometheus:latest
-    container_name: prometheus
-    volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
-    command:
-      - '--enable-feature=native-histograms'
-      - '--web.enable-remote-write-receiver'
-      - '--config.file=/etc/prometheus/prometheus.yml'
-    ports:
-      - "9090:9090"
-    networks:
-      - coupon-network
-
-  # Grafana 서비스
-  grafana:
-    image: grafana/grafana:latest
-    container_name: grafana
-    ports:
-      - "3000:3000"
-    networks:
-      - coupon-network
+#  mysqld-exporter:
+#    container_name: mysqld_exporter
+#    image: prom/mysqld-exporter
+#    environment:
+#      - DATA_SOURCE_NAME="wngus:password123@(store-mysql:3306)/"
+#    command:
+#      - "--mysqld.username=wngus:password123"
+#      - "--mysqld.address=store-mysql:3306"
+#    ports:
+#      - "9104:9104"
+#    depends_on:
+#      - store-mysql
+#    restart: unless-stopped
+#    networks:
+#      - coupons-network  # 추가된 부분
+#
+#  # Prometheus 서비스
+#  prometheus:
+#    image: prom/prometheus:latest
+#    container_name: prometheus
+#    volumes:
+#      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+#    command:
+#      - '--enable-feature=native-histograms'
+#      - '--web.enable-remote-write-receiver'
+#      - '--config.file=/etc/prometheus/prometheus.yml'
+#    ports:
+#      - "9090:9090"
+#    networks:
+#      - coupons-network
+#
+#  # Grafana 서비스
+#  grafana:
+#    image: grafana/grafana:latest
+#    container_name: grafana
+#    ports:
+#      - "3000:3000"
+#    networks:
+#      - coupons-network
 
 networks:
-  coupon-network:
-    driver: bridge
+  coupons-network:
+    external: true
+
 
 
 

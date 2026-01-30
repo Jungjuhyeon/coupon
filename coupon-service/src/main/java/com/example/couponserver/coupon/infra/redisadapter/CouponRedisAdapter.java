@@ -21,7 +21,6 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class CouponRedisAdapter implements CouponCacheOutputPort {
     private final RedisTemplate<String, String> redisTemplate;
-    private static final String COUPON_KEY_PREFIX = "coupon:";
     private static final String STOCK = "stock";
     private static final String START_DATE = "startDate";
     private static final String COUPON_DATE= "endDate";
@@ -29,23 +28,23 @@ public class CouponRedisAdapter implements CouponCacheOutputPort {
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE;
 
     @Override
-    public void saveCouponData(Long couponId, int stock, LocalDate startDate, LocalDate endDate) {
-        String key = COUPON_KEY_PREFIX + couponId;
-        redisTemplate.opsForHash().put(key, STOCK, String.valueOf(stock));
-        redisTemplate.opsForHash().put(key, START_DATE, startDate.format(FORMATTER));
-        redisTemplate.opsForHash().put(key, COUPON_DATE, endDate.format(FORMATTER));
+        public void saveCouponData(Long couponId, int stock, LocalDate startDate, LocalDate endDate) {
+            String key = "coupon:{" + couponId + "}"; // ⭐ 핵심
+            redisTemplate.opsForHash().put(key, STOCK, String.valueOf(stock));
+            redisTemplate.opsForHash().put(key, START_DATE, startDate.format(FORMATTER));
+            redisTemplate.opsForHash().put(key, COUPON_DATE, endDate.format(FORMATTER));
 
-        // endDate의 00:00:00로 TTL 설정
-        LocalDateTime expireTime = endDate.atStartOfDay().plusHours(3); // 2025-04-05 03:00:00
-        long ttl = ChronoUnit.SECONDS.between(LocalDateTime.now(), expireTime);
+            // endDate의 00:00:00로 TTL 설정
+            LocalDateTime expireTime = endDate.atStartOfDay().plusHours(3); // 2025-04-05 03:00:00
+            long ttl = ChronoUnit.SECONDS.between(LocalDateTime.now(), expireTime);
 
-        redisTemplate.expire(key, ttl, TimeUnit.SECONDS);
+            redisTemplate.expire(key, ttl, TimeUnit.SECONDS);
 
     }
 
     @Override
     public CouponCache getCouponCache(Long couponId) {
-        String key = COUPON_KEY_PREFIX + couponId;
+        String key = "coupon:{" + couponId + "}";
 
         String stockStr = (String) redisTemplate.opsForHash().get(key, STOCK);
         String startTimeStr = (String) redisTemplate.opsForHash().get(key, START_DATE);
@@ -66,18 +65,21 @@ public class CouponRedisAdapter implements CouponCacheOutputPort {
     public Object checkStockAndIssueCoupon(Long memberId, Long couponId) {
         // Lua 스크립트 정의
         String script =
-                "local stock = tonumber(redis.call('hget', KEYS[1], 'stock')) " +  // 해시에서 stock을 가져오기
-                        "if stock <= 0 then return 0 end " +  // 재고가 없으면 0 반환
-                        "local issued = redis.call('exists', KEYS[2]) " +  // 발급 여부 확인
-                        "if issued == 1 then return 2 end " +  // 이미 발급된 경우 2 반환
-                        "redis.call('hincrby', KEYS[1], 'stock', -1) " +  // 재고 차감
-                        "redis.call('set', KEYS[2], 'issued') " +  // 쿠폰 발급
-                        "return 1";  // 성공적으로 처리되었음을 나타내는 1 반환
+                "local stock = tonumber(redis.call('hget', KEYS[1], 'stock')) " +
+                        "if not stock or stock <= 0 then return 0 end " +
+                        "if redis.call('exists', KEYS[2]) == 1 then return 2 end " +
+                        "redis.call('hincrby', KEYS[1], 'stock', -1) " +
+                        "redis.call('set', KEYS[2], 'issued') " +
+                        "return 1";
 
+//        List<String> keys = Arrays.asList(
+//                COUPON_KEY_PREFIX + couponId,
+//                "member:" + memberId + ":coupon:" + couponId
+//        );  // 해시맵을 키로 설정
         List<String> keys = Arrays.asList(
-                COUPON_KEY_PREFIX + couponId,
-                "member:" + memberId + ":coupon:" + couponId
-        );  // 해시맵을 키로 설정
+                "coupon:{" + couponId + "}",
+                "coupon:{" + couponId + "}:member:" + memberId
+        );
 
         // Redis Lua 스크립트 실행
         return redisTemplate.execute(new DefaultRedisScript<>(script, Long.class), keys);

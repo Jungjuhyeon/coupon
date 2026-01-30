@@ -1,0 +1,49 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: memberserver
+  datasource:
+    url: jdbc:mysql://member-mysql:3306/member?rewriteBatchedStatements=true
+    username: root
+    password: password123
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 55
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        default_batch_fetch_size: 200
+    open-in-view: false
+
+jwt:
+  secret:
+    key: 605dce51-77ff-44a4-8977-423ec21b9e0c
+
+logging.level:
+  org:
+  hibernate.SQL: debug
+  springFramework:
+    transaction:
+      interceptor : TRACE
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    serviceUrl:
+      defaultZone: http://eureka-server:8761/eureka/
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
