@@ -1,5 +1,6 @@
 package com.example.couponserver.coupon.infra.persistence;
 
+import com.example.couponserver.coupon.application.outputport.CouponIssueLogOutputPort;
 import com.example.couponserver.coupon.domain.model.CouponIssueLog;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -12,7 +13,7 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class CouponIssueLogBulkRepository {
+public class CouponIssueLogBulkRepository implements CouponIssueLogOutputPort {
 
     private final JdbcTemplate jdbcTemplate;
 

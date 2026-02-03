@@ -3,11 +3,12 @@ package com.example.couponserver.coupon.exception;
 import com.example.common.global.exception.errorcode.ErrorCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 
 @Getter
 @RequiredArgsConstructor
 public enum CouponErrorCode implements ErrorCode {
+
+    MEMBER_NOT_FOUND(404,"M-4001","해당 가게는 존재하지 않습니다."),
     //event error(4101 ~ 4200)
     PROMOTION_NOT_FOUND(404, "4101", "해당 이벤트를 찾을 수 없습니다."),
     PROMOTION_NOT_ACTIVE(400, "4102", "이벤트 기간이 아닙니다."),
