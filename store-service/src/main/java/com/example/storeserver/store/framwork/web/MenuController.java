@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/menus")
 public class MenuController {
     private final AddMenuUseCase addMenuUseCase;
-
     @PostMapping("/create")
     public SuccessResponse<MenuOutputDTO> create(@RequestBody MenuListDTO request){
         MenuOutputDTO response = addMenuUseCase.create(request);

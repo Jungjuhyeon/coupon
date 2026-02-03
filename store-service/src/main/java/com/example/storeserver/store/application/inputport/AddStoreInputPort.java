@@ -38,7 +38,7 @@ public class AddStoreInputPort implements AddStoreUseCase {
         Brand brand = brandOutputPort.findById(request.getBrandId())
                 .orElseThrow(() -> new BusinessException(StoreErrorCode.BRAND_NOT_FOUND));
 
-        boolean existsOwner = memberOutputPort.existsById(memberId);
+        boolean existsOwner = memberOutputPort.existsOwner(memberId);
         if (!existsOwner) {
             throw new BusinessException(StoreErrorCode.OWNER_NOT_FOUND);
         }

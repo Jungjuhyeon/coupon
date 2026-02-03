@@ -90,7 +90,7 @@ resilience4j:
         minimum-number-of-calls: 10
         wait-duration-in-open-state: 10s
     instances:
-      store-circuit-breaker:
+      member-service:
         base-config: default
 
 member:

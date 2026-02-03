@@ -33,7 +33,10 @@ public class InquiryStoreInputPort implements InquiryStoreUseCase {
 
         OwnerInfo ownerInfo = OwnerInfo.mapToDTO(memberOutputPort.getOwnerInfo(store.getOwnerId()));
 
-        return StoreInfoOutputDTO.mapToDTO(store,ownerInfo);
+        return StoreInfoOutputDTO.mapToDTO(
+                store,
+                ownerInfo
+        );
     }
 
     @Override
@@ -41,11 +44,16 @@ public class InquiryStoreInputPort implements InquiryStoreUseCase {
         StoreBasicInfo storeInfo = storeOutputPort.findStoreBasicInfo(storeId)
                         .orElseThrow(() -> new BusinessException(StoreErrorCode.STORE_NOT_FOUND));
 
-        List<MenuOrderViewFeignDTO> menuOrderViewFeignDTOList = menuOutputPort.findAllById(menuIds).stream()
-                .map(m-> MenuOrderViewFeignDTO.mapToDTO(m.getId(),m.getName()))
+        List<MenuOrderViewFeignDTO> menus = menuOutputPort.findAllById(menuIds).stream()
+                .map(m-> MenuOrderViewFeignDTO.mapToDTO(m.getId(), m.getName()))
                 .toList();
 
-        return StoreOrderViewFeignDTO.mapToDTO(storeInfo.getStoreName(),storeInfo.getBrandName(),storeInfo.getCategoryName(), menuOrderViewFeignDTOList);
+        return StoreOrderViewFeignDTO.mapToDTO(
+                storeInfo.getStoreName(),
+                storeInfo.getBrandName(),
+                storeInfo.getCategoryName(),
+                menus
+        );
     }
 
     @Override

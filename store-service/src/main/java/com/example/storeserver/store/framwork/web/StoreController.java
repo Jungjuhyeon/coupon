@@ -28,8 +28,8 @@ public class StoreController {
 
     @GetMapping("/{storeId}")
     public SuccessResponse<StoreInfoOutputDTO> getStore(@PathVariable Long storeId){
-        StoreInfoOutputDTO respone = inquiryStoreUsecase.getStore(storeId);
-        return SuccessResponse.success(respone);
+        StoreInfoOutputDTO response = inquiryStoreUsecase.getStore(storeId);
+        return SuccessResponse.success(response);
     }
 
 }
