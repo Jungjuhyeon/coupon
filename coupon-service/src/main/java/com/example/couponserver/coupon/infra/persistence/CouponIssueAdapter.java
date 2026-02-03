@@ -23,8 +23,4 @@ public class CouponIssueAdapter implements CouponIssueOutputPort {
         return couponIssueJpaRepository.findById(couponIssueId);
     }
 
-    @Override
-    public Optional<CouponIssue> findByIdAndMemberId(Long couponIssueId,Long memberId){
-        return couponIssueJpaRepository.findByIdAndMemberId(couponIssueId,memberId);
-    }
 }

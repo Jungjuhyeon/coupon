@@ -1,5 +1,7 @@
 package com.example.couponserver.coupon.infra.kafkaadapter;
 
+import com.example.common.global.exception.BusinessException;
+import com.example.common.global.exception.errorcode.CommonErrorCode;
 import com.example.couponserver.coupon.application.outputport.EventOutputPort;
 import com.example.couponserver.coupon.domain.model.event.CouponIssuedEvent;
 import com.example.couponserver.coupon.domain.model.event.CouponIssuedLogEvent;
@@ -27,30 +29,33 @@ public class CouponIssuedProducer implements EventOutputPort {
 
     @Override
     public void occurCouponIssuedEvent(CouponIssuedEvent event) {
-        sendMessage(TOPIC_ISSUE, event);
+        send(TOPIC_ISSUE, event);
     }
 
     @Override
     public void occurCouponIssuedLogEvent(CouponIssuedLogEvent event) {
-        sendMessage(TOPIC_LOG, event);
+        send(TOPIC_LOG, event);
     }
 
-    private void sendMessage(String topic, Object event) {
+    private void send(String topic, Object event) {
         CompletableFuture<SendResult<String, Object>> future = kafkaTemplate.send(topic, event);
 
-        future.thenAccept(result -> {
-            log.info("Sent message=[{}] to topic=[{}] with offset=[{}]",
-                    event instanceof CouponIssuedEvent e ? e.getCouponId() : ((CouponIssuedLogEvent) event).getCouponId(),
-                    topic,
-                    result.getRecordMetadata().offset());
-        }).exceptionally(ex -> {
-            log.error("Unable to send message=[{}] to topic=[{}] due to: {}",
-                    event instanceof CouponIssuedEvent e ? e.getCouponId() : ((CouponIssuedLogEvent) event).getCouponId(),
-                    topic,
-                    ex.getMessage(), ex);
-            return null;
-        });
+        try {
+            future.thenAccept(result -> {
+                log.info("Sent message=[{}] to topic=[{}] with offset=[{}]",
+                        event instanceof CouponIssuedEvent e ? e.getCouponId() : ((CouponIssuedLogEvent) event).getCouponId(),
+                        topic,
+                        result.getRecordMetadata().offset());
+            }).exceptionally(ex -> {
+                log.error("Unable to send message=[{}] to topic=[{}] due to: {}",
+                        event instanceof CouponIssuedEvent e ? e.getCouponId() : ((CouponIssuedLogEvent) event).getCouponId(),
+                        topic,
+                        ex.getMessage(), ex);
+                return null;
+            });
+        } catch (Exception e) {
+            throw new BusinessException(CommonErrorCode.EVENT_PUBLISH_FAILED);
+        }
+
     }
-
-
 }
