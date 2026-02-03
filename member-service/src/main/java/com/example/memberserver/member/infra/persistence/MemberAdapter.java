@@ -14,7 +14,7 @@ public class MemberAdapter implements MemberOutputPort {
     private final MemberJpaRepository memberJpaRepository;
 
     @Override
-    public boolean checkEmail(String email){
+    public boolean existsByEmail(String email){
         return memberJpaRepository.existsByEmail(email);
     }
 

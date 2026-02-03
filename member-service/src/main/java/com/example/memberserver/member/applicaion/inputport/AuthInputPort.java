@@ -26,7 +26,7 @@ public class AuthInputPort implements AuthMember {
     @Transactional
     public Member signUp(MemberInfoDTO request){
         //email 중복체크
-        if(memberOutputPort.checkEmail(request.getEmail())){
+        if(memberOutputPort.existsByEmail(request.getEmail())){
             throw new BusinessException(MemberErrorCode.DUPLICATE_EMAIL);
         };
         //비밀번호 암호화
@@ -40,7 +40,8 @@ public class AuthInputPort implements AuthMember {
     @Override
     public MemberLoginOutputDTO login(MemberLoginDTO request){
 
-        Member member = memberOutputPort.findByEmail(request.getEmail()).orElseThrow(()-> new BusinessException(MemberErrorCode.USER_EMAIL_NOT_FOUND));
+        Member member = memberOutputPort.findByEmail(request.getEmail())
+                .orElseThrow(()-> new BusinessException(MemberErrorCode.USER_EMAIL_NOT_FOUND));
         //비밀번호 체크
         if(!passwordEncoder.matches(request.getPassword(),member.getPassword())){
             throw new BusinessException(MemberErrorCode.USER_PASSWORD_MISMATCH);
