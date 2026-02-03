@@ -9,6 +9,4 @@ public interface PromotionCacheOutputPort {
 
     PromotionCache getPromotionCache(Long promotionId);
 
-    void deletePromotionCache(Long promotionId);
-
 }

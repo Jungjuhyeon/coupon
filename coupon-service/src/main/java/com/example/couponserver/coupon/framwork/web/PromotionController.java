@@ -1,7 +1,7 @@
 package com.example.couponserver.coupon.framwork.web;
 
 import com.example.common.global.exception.response.SuccessResponse;
-import com.example.couponserver.coupon.application.usecase.AddPromotionUsecase;
+import com.example.couponserver.coupon.application.usecase.AddPromotionUseCase;
 import com.example.couponserver.coupon.framwork.web.request.PromotionIdInfoDTO;
 import com.example.couponserver.coupon.framwork.web.response.PromotionOutPutDTO;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/promotions")
 public class PromotionController {
-    private final AddPromotionUsecase addPromotionUsecase;
+    private final AddPromotionUseCase addPromotionUsecase;
 
     @PostMapping("/create")
     public SuccessResponse<PromotionOutPutDTO> createCoupon(@RequestBody PromotionIdInfoDTO request){

@@ -64,9 +64,4 @@ public class PromotionIdRedisAdapter implements PromotionCacheOutputPort {
         return PromotionCache.create(promotionId, dailyStartTime, dailyEndTime,startDateTime,endDateTime);
     }
 
-    @Override
-    public void deletePromotionCache(Long promotionId) {
-        String key = EVENT_KEY_PREFIX + promotionId;
-        redisTemplate.delete(key);
-    }
 }
