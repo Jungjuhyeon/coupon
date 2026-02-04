@@ -1,4 +1,4 @@
-package com.example.orderserver.order.outbox.application.outputport;
+package com.example.orderserver.outbox.application.outputport;
 
 
 

@@ -1,8 +1,8 @@
-package com.example.orderserver.order.outbox.application.outputport;
+package com.example.orderserver.outbox.application.outputport;
 
 
-import com.example.orderserver.order.outbox.domain.OutboxEvent;
-import com.example.orderserver.order.outbox.domain.enumeration.OutboxEventStatus;
+import com.example.orderserver.outbox.domain.OutboxEvent;
+import com.example.orderserver.outbox.domain.enumeration.OutboxEventStatus;
 
 import java.util.List;
 import java.util.Optional;

@@ -2,7 +2,7 @@ package com.example.orderserver.order.infra.kafkaadapter;
 
 import com.example.orderserver.order.application.outputport.OrderEventOutputPort;
 import com.example.orderserver.order.domain.model.event.OrderCreatedEvent;
-import com.example.orderserver.order.outbox.application.outputport.OutboxEventSender;
+import com.example.orderserver.outbox.application.outputport.OutboxEventSender;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,14 +13,14 @@ import java.util.concurrent.CompletableFuture;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class OrderOutboxEventSender implements OutboxEventSender {
+public class OrderCreatedOutboxSender implements OutboxEventSender {
 
     private final ObjectMapper objectMapper;
     private final OrderEventOutputPort orderEventOutputPort;
-
+    private static final String EVENT_TYPE = "OrderCreated";
     @Override
     public boolean supports(String eventType) {
-        return "OrderCreated".equals(eventType);
+        return EVENT_TYPE.equals(eventType);
     }
 
     @Override

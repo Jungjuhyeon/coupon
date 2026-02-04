@@ -1,7 +1,7 @@
-package com.example.orderserver.order.outbox.framwork.jpaadapter;
+package com.example.orderserver.outbox.framwork.jpaadapter;
 
-import com.example.orderserver.order.outbox.domain.OutboxEvent;
-import com.example.orderserver.order.outbox.domain.enumeration.OutboxEventStatus;
+import com.example.orderserver.outbox.domain.OutboxEvent;
+import com.example.orderserver.outbox.domain.enumeration.OutboxEventStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.example.orderserver.order.outbox.domain.enumeration;
+package com.example.orderserver.outbox.domain.enumeration;
 
 public enum OutboxEventStatus {
     READY_TO_PUBLISH,

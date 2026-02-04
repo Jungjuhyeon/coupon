@@ -1,9 +1,9 @@
-package com.example.orderserver.order.outbox.application.scheduler;
+package com.example.orderserver.outbox.application.scheduler;
 
-import com.example.orderserver.order.outbox.application.inputport.OrderOutboxPublisher;
-import com.example.orderserver.order.outbox.application.outputport.OutboxOutputPort;
-import com.example.orderserver.order.outbox.domain.OutboxEvent;
-import com.example.orderserver.order.outbox.domain.enumeration.OutboxEventStatus;
+import com.example.orderserver.outbox.application.inputport.OrderOutboxPublisher;
+import com.example.orderserver.outbox.application.outputport.OutboxOutputPort;
+import com.example.orderserver.outbox.domain.OutboxEvent;
+import com.example.orderserver.outbox.domain.enumeration.OutboxEventStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -31,7 +31,7 @@ public class OutboxRetryScheduler {
 
         retryTargets.forEach(event -> {
             try {
-                outboxPublisher.sendToKafka(event);
+                outboxPublisher.publishOutboxEvent(event);
             } catch (Exception e) {
                 log.error("[OutboxScheduler] Kafka 발행 재시도 실패 - aggregateId={}, reason={}",
                         event.getAggregateId(), e.getMessage(), e);

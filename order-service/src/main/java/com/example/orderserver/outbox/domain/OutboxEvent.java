@@ -1,6 +1,6 @@
-package com.example.orderserver.order.outbox.domain;
+package com.example.orderserver.outbox.domain;
 
-import com.example.orderserver.order.outbox.domain.enumeration.OutboxEventStatus;
+import com.example.orderserver.outbox.domain.enumeration.OutboxEventStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

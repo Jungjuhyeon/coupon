@@ -1,7 +1,7 @@
-package com.example.orderserver.order.outbox.application.inputport;
+package com.example.orderserver.outbox.application.inputport;
 
-import com.example.orderserver.order.outbox.application.outputport.OutboxOutputPort;
-import com.example.orderserver.order.outbox.application.usecase.OutboxUseCase;
+import com.example.orderserver.outbox.application.outputport.OutboxOutputPort;
+import com.example.orderserver.outbox.application.usecase.OutboxUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

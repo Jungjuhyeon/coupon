@@ -1,8 +1,8 @@
-package com.example.orderserver.order.outbox.framwork.kafkaadapter;
+package com.example.orderserver.outbox.framwork.kafkaadapter;
 
 
 import com.example.orderserver.order.domain.model.event.OrderCreatedEvent;
-import com.example.orderserver.order.outbox.application.usecase.OutboxUseCase;
+import com.example.orderserver.outbox.application.usecase.OutboxUseCase;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

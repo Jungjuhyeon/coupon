@@ -19,12 +19,12 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Document(collection = "orders_summaries") // MongoDB 컬렉션 이름
+@Document(collection = "order_read_models") // MongoDB 컬렉션 이름
 @CompoundIndexes({ // 여러 복합 인덱스를 선언할 땐 @CompoundIndexes 사용
         @CompoundIndex(def = "{'memberId': 1, 'orderTime': -1}"),
         @CompoundIndex(name = "unique_order_idx", def = "{'orderId': 1}", unique = true)
 })
-public class OrderSummaryDocument {
+public class OrderReadModel {
 
     @Id
     private String id;
@@ -70,10 +70,10 @@ public class OrderSummaryDocument {
     }
 
     // DTO → Document 변환 메서드
-    public static OrderSummaryDocument from(Order order, Long memberId, String storeCategoryName,
-                                                 String storeBrandName, String storeName,List<OrderMenuDocument> orderMenus) {
+    public static OrderReadModel from(Order order, Long memberId, String storeCategoryName,
+                                      String storeBrandName, String storeName, List<OrderMenuDocument> orderMenus) {
 //                                                 DiscountType discountType) {
-        return OrderSummaryDocument.builder()
+        return OrderReadModel.builder()
                 .orderId(order.getId())
                 .memberId(memberId)
                 .originalPrice(order.getOriginalPrice())

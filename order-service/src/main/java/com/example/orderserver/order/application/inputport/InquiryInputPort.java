@@ -3,12 +3,12 @@ package com.example.orderserver.order.application.inputport;
 import com.example.common.global.exception.BusinessException;
 import com.example.orderserver.order.application.assembler.OrderDetailAssembler;
 import com.example.orderserver.order.application.outputport.OrderOutputPort;
-import com.example.orderserver.order.application.outputport.OrderSummaryOutputPort;
+import com.example.orderserver.order.application.outputport.OrderReadModelOutputPort;
 import com.example.orderserver.order.application.outputport.StoreOutputPort;
 import com.example.orderserver.order.application.usecase.InquiryOrderUseCase;
 import com.example.orderserver.order.domain.model.Order;
 import com.example.orderserver.order.domain.model.OrderMenu;
-import com.example.orderserver.order.domain.model.document.OrderSummaryDocument;
+import com.example.orderserver.order.domain.model.document.OrderReadModel;
 import com.example.orderserver.order.exception.OrderErrorCode;
 import com.example.orderserver.order.framwork.web.response.OrderInfoOutPutDTO;
 import com.example.orderserver.order.infra.store.dto.response.StoreOrderViewFeignDTO;
@@ -21,12 +21,12 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class InqueryInputPort implements InquiryOrderUseCase {
+public class InquiryInputPort implements InquiryOrderUseCase {
 
     private final OrderOutputPort orderOutputPort;
     private final StoreOutputPort storeOutputPort;
     private final OrderDetailAssembler orderDetailAssembler;
-    private final OrderSummaryOutputPort orderSummaryOutputPort;
+    private final OrderReadModelOutputPort orderReadModelOutputPort;
 
     @Override
     public OrderInfoOutPutDTO getOrderDetail(Long memberId, Long orderId){
@@ -42,12 +42,15 @@ public class InqueryInputPort implements InquiryOrderUseCase {
 //                .orElseThrow(()-> new BusinessException(CommonErrorCode.PAYMENT_NOT_FOUND));
 
         return orderDetailAssembler.assemble(order, storeOrderView);
-
     }
-
     @Override
-    public List<OrderSummaryDocument> getOrder(Long memberId){
-        return orderSummaryOutputPort.findByMemberId(memberId);
+    public List<OrderReadModel> getOrder(Long memberId){
+        return orderReadModelOutputPort.findByMemberId(memberId);
+    }
+    @Override
+    public Order getOrderById(Long orderId){
+        return orderOutputPort.findById(orderId)
+                .orElseThrow(()-> new BusinessException(OrderErrorCode.ORDER_NOT_FOUND));
     }
 
 }

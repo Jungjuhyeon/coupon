@@ -1,4 +1,4 @@
-package com.example.orderserver.order.outbox.application.usecase;
+package com.example.orderserver.outbox.application.usecase;
 
 
 public interface OutboxUseCase {
