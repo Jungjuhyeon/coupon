@@ -132,9 +132,18 @@ resilience4j:
         minimum-number-of-calls: 10
         wait-duration-in-open-state: 10s
     instances:
-      order-circuit-breaker:
+      member-service:
+        ignore-exceptions:
+          - feign.FeignException.NotFound
         base-config: default
-
+      store-service:
+        ignore-exceptions:
+          - feign.FeignException.NotFound
+        base-config: default
+      coupon-service:
+        ignore-exceptions:
+          - feign.FeignException.NotFound
+        base-config: default
 member:
   service:
     url: http://member-server:8081

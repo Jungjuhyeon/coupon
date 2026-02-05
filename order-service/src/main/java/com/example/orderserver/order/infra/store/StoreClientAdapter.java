@@ -17,39 +17,51 @@ import java.util.List;
 public class StoreClientAdapter implements StoreOutputPort {
     private final StoreFeignClient storeFeignClient;
     @Override
+    @CircuitBreaker(
+            name = "store-service",
+            fallbackMethod = "validateStoreFallback"
+    )
     public void validateStore(Long storeId){
-        try{
-            storeFeignClient.validateStore(storeId);
-        } catch (FeignException e) {
-            throw new BusinessException(OrderErrorCode.ORDER_PRECONDITION_FAILED);
-        }
+        storeFeignClient.validateStore(storeId);
     }
-    @Override
-    public List<MenuInfoFeignDTO> getMenuInfoList(List<Long>couponIssueIdList){
-        try{
-            return storeFeignClient.getMenus(couponIssueIdList);
-        } catch (FeignException e) {
-            throw new BusinessException(OrderErrorCode.ORDER_PRECONDITION_FAILED);
+    private void validateStoreFallback(Long storeId, Throwable throwable) {
+        if (throwable instanceof FeignException feignEx && feignEx.status() == 404) {
+            throw new BusinessException(OrderErrorCode.STORE_NOT_FOUND);
         }
+        throw new BusinessException(OrderErrorCode.STORE_SERVICE_UNAVAILABLE);
     }
     @Override
     @CircuitBreaker(
-            name = "order-circuit-breaker",
+            name = "store-service",
+            fallbackMethod = "storeFallback"
+    )
+    public List<MenuInfoFeignDTO> getMenuInfoList(List<Long> couponIssueIdList){
+        return storeFeignClient.getMenus(couponIssueIdList);
+    }
+    private List<MenuInfoFeignDTO> storeFallback(List<Long> couponIssueIdList, Throwable throwable) {
+        if (throwable instanceof FeignException feignEx && feignEx.status() == 404) {
+            throw new BusinessException(OrderErrorCode.MENU_NOT_FOUND);
+        }
+        throw new BusinessException(OrderErrorCode.STORE_SERVICE_UNAVAILABLE);
+    }
+
+    @Override
+    @CircuitBreaker(
+            name = "store-service",
             fallbackMethod = "getStoreOrderViewFallback"
     )
     public StoreOrderViewFeignDTO getStoreOrderView(Long storeId, List<Long> menuIds){
-        try{
-            return storeFeignClient.getStoreOrderView(storeId,menuIds);
-        } catch (FeignException e) {
+        return storeFeignClient.getStoreOrderView(storeId,menuIds);
+    }
+    private StoreOrderViewFeignDTO getStoreOrderViewFallback(Long storeId, List<Long> menuIds, Throwable throwable) {
+        if (throwable instanceof FeignException feignEx && feignEx.status() == 404) {
             throw new BusinessException(OrderErrorCode.ORDER_VIEW_RESOURCE_NOT_FOUND);
         }
-    }
-    private StoreOrderViewFeignDTO getStoreOrderViewFallback(Long storeId, List<Long> menuIds, Throwable t) {
         return new StoreOrderViewFeignDTO("알 수 없음", null, null, List.of());
     }
 
     @Override
-    public StoreOrderViewFeignDTO getStoreOrderViewForProjection(Long storeId, List<Long> menuIds) {
+    public StoreOrderViewFeignDTO getRequiredStoreOrderView(Long storeId, List<Long> menuIds) {
         try{
             return storeFeignClient.getStoreOrderView(storeId,menuIds);
         } catch (FeignException e) {
