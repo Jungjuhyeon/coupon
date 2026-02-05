@@ -1,13 +1,15 @@
 package com.example.orderserver.order.application.usecase;
 
-import com.example.orderserver.order.domain.model.document.OrderSummaryDocument;
+import com.example.orderserver.order.domain.model.Order;
+import com.example.orderserver.order.domain.model.document.OrderReadModel;
 import com.example.orderserver.order.framwork.web.response.OrderInfoOutPutDTO;
 
 import java.util.List;
 
 public interface InquiryOrderUseCase {
 
-    public OrderInfoOutPutDTO getOrderDetail(Long memberId, Long orderId);
+    OrderInfoOutPutDTO getOrderDetail(Long memberId, Long orderId);
+    List<OrderReadModel> getOrder(Long memberId);
+    Order getOrderById(Long orderId);
 
-    public List<OrderSummaryDocument> getOrder(Long memberId);
 }

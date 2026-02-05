@@ -1,4 +1,4 @@
-package com.example.orderserver.outbox.framwork.jpaadapter;
+package com.example.orderserver.outbox.infra.jpaadapter;
 
 import com.example.orderserver.outbox.application.outputport.OutboxOutputPort;
 import com.example.orderserver.outbox.domain.OutboxEvent;

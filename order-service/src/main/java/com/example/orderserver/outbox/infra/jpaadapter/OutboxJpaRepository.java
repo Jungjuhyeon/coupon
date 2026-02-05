@@ -1,4 +1,4 @@
-package com.example.orderserver.outbox.framwork.jpaadapter;
+package com.example.orderserver.outbox.infra.jpaadapter;
 
 import com.example.orderserver.outbox.domain.OutboxEvent;
 import com.example.orderserver.outbox.domain.enumeration.OutboxEventStatus;
@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface OutboxJpaRepository extends JpaRepository<OutboxEvent,Long> {
 
-    public Optional<OutboxEvent> findByAggregateIdAndEventType(Long aggregateId, String eventType);
+    Optional<OutboxEvent> findByAggregateIdAndEventType(Long aggregateId, String eventType);
 
     List<OutboxEvent> findByStatusIn(List<OutboxEventStatus> statuses);
 
