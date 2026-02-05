@@ -15,6 +15,9 @@ public enum CommonErrorCode implements ErrorCode{
     JWT_AUTHORIZATION_FAILED(401,"JWT4105","권한이 없습니다."),
 
     EVENT_PUBLISH_FAILED(500, "5000", "이벤트 발행에 실패했습니다."),
+    EVENT_SERIALIZATION_FAILED(500, "5003", "이벤트 페이로드 직렬화에 실패했습니다."),
+    EVENT_DESERIALIZATION_FAILED(500, "5004", "이벤트 페이로드 역직렬화에 실패했습니다."),
+
     REDIS_SCRIPT_ERROR(500, "5001", "Redis 스크립트 실행 중 오류가 발생했습니다."),
     LOCK_ACQUISITION_FAILED(500, "5002", "분산 락 획득에 실패했습니다.");
 

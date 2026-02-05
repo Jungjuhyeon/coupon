@@ -34,7 +34,7 @@ public class AddOrderInputPort implements AddOrderUseCase {
 
     @Override
     @Transactional
-    public OrderOutputDTO create(Long memberId, Long storeId, OrderInputDTO request) throws JsonProcessingException {
+    public OrderOutputDTO create(Long memberId, Long storeId, OrderInputDTO request){
 
         // 유저, 가게 존재 여부 검증
         memberOutputPort.validateMember(memberId);
