@@ -36,8 +36,9 @@
 ## MSA 전환기
 
 - [[MSA] 모놀리식 to MSA 전환기 (1) - MSA란](https://velog.io/@wngus4278/Temp-Title-yfdw2gwu)
-- [[MSA] 모놀리식 to MSA 전환기 (2) - 멀티 모듈 구성하기 - MSA란](https://velog.io/@wngus4278/MSA-%EB%AA%A8%EB%86%80%EB%A6%AC%EC%8B%9D-to-MSA-%EC%A0%84%ED%99%98%EA%B8%B0-%EB%A9%80%ED%8B%B0-%EB%AA%A8%EB%93%88-%EA%B5%AC%EC%84%B1%ED%95%98%EA%B8%B0)
-
+- [[MSA] 모놀리식 to MSA 전환기 (2) - 멀티 모듈 구성하기](https://velog.io/@wngus4278/MSA-%EB%AA%A8%EB%86%80%EB%A6%AC%EC%8B%9D-to-MSA-%EC%A0%84%ED%99%98%EA%B8%B0-%EB%A9%80%ED%8B%B0-%EB%AA%A8%EB%93%88-%EA%B5%AC%EC%84%B1%ED%95%98%EA%B8%B0)
+- [[MSA] 모놀리식 to MSA 전환기 (3) - Service Discovery 패턴 적용하기](https://velog.io/@wngus4278/MSA-%EB%AA%A8%EB%86%80%EB%A6%AC%EC%8B%9D-to-MSA-%EC%A0%84%ED%99%98%EA%B8%B0-Service-Discovery-%ED%8C%A8%ED%84%B4-%EC%A0%81%EC%9A%A9%ED%95%98%EA%B8%B0)
+- [[MSA] 모놀리식 to MSA 전환기 (4) - API Gateway 적용하기](https://velog.io/@wngus4278/MSA-%EB%AA%A8%EB%86%80%EB%A6%AC%EC%8B%9D-to-MSA-%EC%A0%84%ED%99%98%EA%B8%B0-API-Gateway-%EC%A0%81%EC%9A%A9%ED%95%98%EA%B8%B0)
 
 ## Commit Convention
 
