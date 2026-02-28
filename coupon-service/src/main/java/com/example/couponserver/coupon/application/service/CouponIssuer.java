@@ -19,23 +19,24 @@ public class CouponIssuer {
     private final CouponIssueEventPublisher eventPublisher;
 
     public void issue(Long memberId, Long couponId, LocalDateTime now){
-        Long result = (Long) couponCacheOutputPort.checkStockAndIssueCoupon(memberId, couponId);
+        Long result;
 
-        try{
-            if (result == null) {
-                throw new BusinessException(CommonErrorCode.REDIS_SCRIPT_ERROR);
-            }
-            if (result == 0) {
-                eventPublisher.publishFail(memberId, couponId, now, EventType.OUT_OF_STOCK);
-                throw new BusinessException(CouponErrorCode.COUPON_OUT_OF_STOCK);
-            }
-            if (result == 2) {
-                eventPublisher.publishFail(memberId, couponId, now, EventType.DUPLICATE);
-                throw new BusinessException(CouponErrorCode.COUPON_ALREADY_ISSUED);
-            }
-        }catch (Exception e) {
-            // Redis 호출 실패 등
+        try {
+            result = (Long) couponCacheOutputPort.checkStockAndIssueCoupon(memberId, couponId);
+        } catch (Exception e) {
             throw new BusinessException(CommonErrorCode.REDIS_SCRIPT_ERROR);
+        }
+
+        if (result == null) {
+            throw new BusinessException(CommonErrorCode.REDIS_SCRIPT_ERROR);
+        }
+        if (result == 0) {
+            eventPublisher.publishFail(memberId, couponId, now, EventType.OUT_OF_STOCK);
+            throw new BusinessException(CouponErrorCode.COUPON_OUT_OF_STOCK);
+        }
+        if (result == 2) {
+            eventPublisher.publishFail(memberId, couponId, now, EventType.DUPLICATE);
+            throw new BusinessException(CouponErrorCode.COUPON_ALREADY_ISSUED);
         }
     }
 }

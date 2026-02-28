@@ -18,19 +18,21 @@ public class PromotionValidator {
     private final CouponIssueEventPublisher couponIssueEventPublisher;
 
     public void validate(Long memberId, Long couponId, Long promotionId, LocalDateTime now){
-        PromotionCache promotion = promotionCacheOutputPort.getPromotionCache(promotionId);
+        PromotionCache promotion;
 
         try {
-            if (promotion == null) {
-                throw new BusinessException(CouponErrorCode.PROMOTION_NOT_FOUND);
-            }
-            if (!promotion.isValid(now)) {
-                couponIssueEventPublisher.publishFail(memberId, couponId, now, EventType.INVALID_TIME);
-                throw new BusinessException(CouponErrorCode.PROMOTION_NOT_ACTIVE);
-            }
-        }catch (Exception e) {
-            // Redis 호출 실패 등
+            promotion = promotionCacheOutputPort.getPromotionCache(promotionId);
+        } catch (Exception e) {
             throw new BusinessException(CommonErrorCode.REDIS_SCRIPT_ERROR);
+        }
+
+        if (promotion == null) {
+            throw new BusinessException(CouponErrorCode.PROMOTION_NOT_FOUND);
+        }
+
+        if (!promotion.isValid(now)) {
+            couponIssueEventPublisher.publishFail(memberId, couponId, now, EventType.INVALID_TIME);
+            throw new BusinessException(CouponErrorCode.PROMOTION_NOT_ACTIVE);
         }
     }
 }

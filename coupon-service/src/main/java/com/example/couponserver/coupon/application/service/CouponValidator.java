@@ -18,19 +18,21 @@ public class CouponValidator {
     private final CouponIssueEventPublisher couponIssueEventPublisher;
 
     public void validate(Long memberId, Long couponId, LocalDateTime now){
-        CouponCache coupon = couponCacheOutputPort.getCouponCache(couponId);
+        CouponCache coupon;
 
-        try{
-            if (coupon == null) {
-                throw new BusinessException(CouponErrorCode.COUPON_NOT_FOUND);
-            }
-            if (!coupon.isValid(now.toLocalDate())) {
-                couponIssueEventPublisher.publishFail(memberId, couponId, now, EventType.INVALID_TIME);
-                throw new BusinessException(CouponErrorCode.COUPON_NOT_ACTIVE);
-            }
-        }catch (Exception e) {
-            // Redis 호출 실패 등
+        try {
+            coupon = couponCacheOutputPort.getCouponCache(couponId);
+        } catch (Exception e) {
             throw new BusinessException(CommonErrorCode.REDIS_SCRIPT_ERROR);
+        }
+
+        if (coupon == null) {
+            throw new BusinessException(CouponErrorCode.COUPON_NOT_FOUND);
+        }
+
+        if (!coupon.isValid(now.toLocalDate())) {
+            couponIssueEventPublisher.publishFail(memberId, couponId, now, EventType.INVALID_TIME);
+            throw new BusinessException(CouponErrorCode.COUPON_NOT_ACTIVE);
         }
     }
 }

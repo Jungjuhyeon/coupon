@@ -67,22 +67,23 @@ public class CouponRedisAdapter implements CouponCacheOutputPort {
         String script =
                 "local stock = tonumber(redis.call('hget', KEYS[1], 'stock')) " +
                         "if not stock or stock <= 0 then return 0 end " +
-                        "if redis.call('exists', KEYS[2]) == 1 then return 2 end " +
+                        "if redis.call('sismember', KEYS[2], ARGV[1]) == 1 then return 2 end " +
                         "redis.call('hincrby', KEYS[1], 'stock', -1) " +
-                        "redis.call('set', KEYS[2], 'issued') " +
+                        "redis.call('sadd', KEYS[2], ARGV[1]) " +
+                        "redis.call('sadd', KEYS[3], ARGV[1]) " +
                         "return 1";
 
-//        List<String> keys = Arrays.asList(
-//                COUPON_KEY_PREFIX + couponId,
-//                "member:" + memberId + ":coupon:" + couponId
-//        );  // 해시맵을 키로 설정
         List<String> keys = Arrays.asList(
-                "coupon:{" + couponId + "}",
-                "coupon:{" + couponId + "}:member:" + memberId
+                "coupon:{" + couponId + "}",          // stock hash
+                "coupon:{" + couponId + "}:issued",   // 중복 체크 set
+                "coupon:{" + couponId + "}:ready_to_publish"   // 재처리 set
         );
 
-        // Redis Lua 스크립트 실행
-        return redisTemplate.execute(new DefaultRedisScript<>(script, Long.class), keys);
+        return redisTemplate.execute(
+                new DefaultRedisScript<>(script, Long.class),
+                keys,
+                String.valueOf(memberId)   // ARGV[1]
+        );
     }
 
 }
