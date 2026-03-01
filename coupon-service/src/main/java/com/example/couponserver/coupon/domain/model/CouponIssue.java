@@ -13,6 +13,14 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "uk_coupon_member", // 제약 조건 이름
+                        columnNames = {"member_id", "coupon_id"} // 유니크 조합
+                )
+        }
+)
 public class CouponIssue extends BaseEntity {
 
     @Id

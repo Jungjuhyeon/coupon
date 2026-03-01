@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 
@@ -29,11 +30,12 @@ public class IssueCouponInputPort implements IssueCouponUseCase {
         // 이벤트 기간 검증
         promotionValidator.validate(memberId, couponId, promotionId, curTime);
         // 쿠폰 기간 검증
-        couponValidator.validate(memberId, couponId, curTime);
+        LocalDate endDate = couponValidator.validate(memberId, couponId, curTime);
         // 재고 검증 및 중복 검증 쿠폰 재고 감소
-        couponIssuer.issue(memberId, couponId, curTime);
+        couponIssuer.issue(memberId, couponId, curTime, endDate);
         //이벤트 처리
-        couponIssueEventPublisher.publishSuccess(memberId, couponId, curTime);
+        couponIssueEventPublisher.publishEvent(memberId, couponId, curTime);
+        couponIssueEventPublisher.publishSuccessLog(memberId,couponId,curTime);
     }
 
 }

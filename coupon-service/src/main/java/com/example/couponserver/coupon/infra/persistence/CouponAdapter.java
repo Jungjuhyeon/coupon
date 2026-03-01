@@ -5,6 +5,8 @@ import com.example.couponserver.coupon.domain.model.Coupon;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -22,6 +24,9 @@ public class CouponAdapter implements CouponOutputPort {
         return couponJpaRepository.save(coupon);
     }
 
-
+    @Override
+    public List<Long> findActiveCoupons(LocalDate curDate) {
+        return couponJpaRepository.findActiveCoupons(curDate);
+    }
 
 }

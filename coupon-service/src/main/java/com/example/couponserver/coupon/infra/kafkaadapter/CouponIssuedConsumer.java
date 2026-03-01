@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.annotation.RetryableTopic;
 import org.springframework.retry.annotation.Backoff;
@@ -49,7 +50,11 @@ public class CouponIssuedConsumer {
             throw new BusinessException(CouponErrorCode.MEMBER_NOT_FOUND);
         }
         Coupon coupon = inquiryCouponUseCase.getCouponById(couponId);
-        addCouponIssueUseCase.addCouponIssue(memberId, coupon, couponIssuedEvent.getCurrentTime());
+        try {
+            addCouponIssueUseCase.addCouponIssue(memberId, coupon, couponIssuedEvent.getCurrentTime());
+        } catch (DuplicateKeyException e) {
+            log.warn("[중복 발급 무시] memberId={}, couponId={}", memberId, couponId);
+        }
     }
 
 

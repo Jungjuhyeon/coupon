@@ -9,6 +9,7 @@ import com.example.couponserver.coupon.exception.CouponErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Service
@@ -17,7 +18,7 @@ public class CouponValidator {
     private final CouponCacheOutputPort couponCacheOutputPort;
     private final CouponIssueEventPublisher couponIssueEventPublisher;
 
-    public void validate(Long memberId, Long couponId, LocalDateTime now){
+    public LocalDate validate(Long memberId, Long couponId, LocalDateTime now){
         CouponCache coupon;
 
         try {
@@ -31,8 +32,9 @@ public class CouponValidator {
         }
 
         if (!coupon.isValid(now.toLocalDate())) {
-            couponIssueEventPublisher.publishFail(memberId, couponId, now, EventType.INVALID_TIME);
+            couponIssueEventPublisher.publishFailLog(memberId, couponId, now, EventType.INVALID_TIME);
             throw new BusinessException(CouponErrorCode.COUPON_NOT_ACTIVE);
         }
+        return coupon.getEndDate();
     }
 }

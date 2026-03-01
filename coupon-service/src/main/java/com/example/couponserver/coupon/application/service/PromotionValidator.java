@@ -31,7 +31,7 @@ public class PromotionValidator {
         }
 
         if (!promotion.isValid(now)) {
-            couponIssueEventPublisher.publishFail(memberId, couponId, now, EventType.INVALID_TIME);
+            couponIssueEventPublisher.publishFailLog(memberId, couponId, now, EventType.INVALID_TIME);
             throw new BusinessException(CouponErrorCode.PROMOTION_NOT_ACTIVE);
         }
     }

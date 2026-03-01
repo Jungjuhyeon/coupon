@@ -4,7 +4,9 @@ import com.example.couponserver.coupon.application.outputport.CouponCacheOutputP
 import com.example.couponserver.coupon.domain.model.cache.CouponCache;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Repository;
 
@@ -12,8 +14,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -62,7 +63,9 @@ public class CouponRedisAdapter implements CouponCacheOutputPort {
     }
 
     // 쿠폰 발급 처리 메소드
-    public Object checkStockAndIssueCoupon(Long memberId, Long couponId) {
+    public Object checkStockAndIssueCoupon(Long memberId, Long couponId, LocalDateTime now, LocalDate endDate) {
+        LocalDateTime expireTime = endDate.atStartOfDay().plusHours(3);
+        long ttlSeconds = ChronoUnit.SECONDS.between(LocalDateTime.now(), expireTime);
         // Lua 스크립트 정의
         String script =
                 "local stock = tonumber(redis.call('hget', KEYS[1], 'stock')) " +
@@ -70,7 +73,9 @@ public class CouponRedisAdapter implements CouponCacheOutputPort {
                         "if redis.call('sismember', KEYS[2], ARGV[1]) == 1 then return 2 end " +
                         "redis.call('hincrby', KEYS[1], 'stock', -1) " +
                         "redis.call('sadd', KEYS[2], ARGV[1]) " +
-                        "redis.call('sadd', KEYS[3], ARGV[1]) " +
+                        "redis.call('hset', KEYS[3], ARGV[1], ARGV[2]) " +
+                        "redis.call('expire', KEYS[2], tonumber(ARGV[3])) " + // issued set TTL
+                        "redis.call('expire', KEYS[3], tonumber(ARGV[3])) " + // ready_to_publish hash TTL
                         "return 1";
 
         List<String> keys = Arrays.asList(
@@ -82,8 +87,28 @@ public class CouponRedisAdapter implements CouponCacheOutputPort {
         return redisTemplate.execute(
                 new DefaultRedisScript<>(script, Long.class),
                 keys,
-                String.valueOf(memberId)   // ARGV[1]
+                String.valueOf(memberId),             // ARGV[1] : memberId
+                String.valueOf(now),              // ARGV[2] : 발급시간
+                String.valueOf(ttlSeconds)    // ARGV[3] : TTL
         );
+    }
+
+    public void remove(String key, String memberId){
+        redisTemplate.opsForHash().delete(key, memberId);
+    }
+
+    public List<Map.Entry<Object, Object>> getReadyToPublishCoupons(Long couponId) {
+        String key = "coupon:{" + couponId + "}:ready_to_publish";
+
+        List<Map.Entry<Object, Object>> entries = new ArrayList<>();
+        ScanOptions options = ScanOptions.scanOptions().count(300).build();
+
+        try (Cursor<Map.Entry<Object, Object>> cursor = redisTemplate.opsForHash().scan(key, options)) {
+            while (cursor.hasNext()) entries.add(cursor.next());
+        } catch (Exception e) {
+            log.error("[RetryScheduler] 쿠폰 조회 실패 couponId={}", couponId, e);
+        }
+        return entries;
     }
 
 }
