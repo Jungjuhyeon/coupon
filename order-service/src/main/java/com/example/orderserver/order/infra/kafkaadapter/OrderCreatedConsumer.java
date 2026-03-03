@@ -16,7 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.springframework.dao.DuplicateKeyException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.annotation.RetryableTopic;
 import org.springframework.retry.annotation.Backoff;
@@ -63,7 +63,7 @@ public class OrderCreatedConsumer {
 
         try {
             addOrderReadModelUseCase.addOrderReadModel(document);
-        }catch (DuplicateKeyException e) {
+        }catch (DataIntegrityViolationException e) {
             log.warn(" 중복 이벤트 감지 - 저장 생략 ");
         }
     }
