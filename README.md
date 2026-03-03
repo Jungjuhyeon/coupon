@@ -40,6 +40,11 @@
 - [[MSA] 모놀리식 to MSA 전환기 (3) - Service Discovery 패턴 적용하기](https://velog.io/@wngus4278/MSA-%EB%AA%A8%EB%86%80%EB%A6%AC%EC%8B%9D-to-MSA-%EC%A0%84%ED%99%98%EA%B8%B0-Service-Discovery-%ED%8C%A8%ED%84%B4-%EC%A0%81%EC%9A%A9%ED%95%98%EA%B8%B0)
 - [[MSA] 모놀리식 to MSA 전환기 (4) - API Gateway 적용하기](https://velog.io/@wngus4278/MSA-%EB%AA%A8%EB%86%80%EB%A6%AC%EC%8B%9D-to-MSA-%EC%A0%84%ED%99%98%EA%B8%B0-API-Gateway-%EC%A0%81%EC%9A%A9%ED%95%98%EA%B8%B0)
 - [[MSA] 모놀리식 to MSA 전환기 (5) - 서비스간 통신](https://velog.io/@wngus4278/MSA-%EB%AA%A8%EB%86%80%EB%A6%AC%EC%8B%9D-to-MSA-%EC%A0%84%ED%99%98%EA%B8%B0-d)
+
+## 고민거리
+- [Redis 장애 상황에서 선착순 쿠폰 시스템은 어떻게 동작해야 할까?](https://velog.io/@wngus4278/Redis-%EC%9E%A5%EC%95%A0-%EC%83%81%ED%99%A9%EC%97%90%EC%84%9C-%EC%84%A0%EC%B0%A9%EC%88%9C-%EC%BF%A0%ED%8F%B0-%EC%8B%9C%EC%8A%A4%ED%85%9C%EC%9D%80-%EC%96%B4%EB%96%BB%EA%B2%8C-%EB%8F%99%EC%9E%91%ED%95%B4%EC%95%BC-%ED%95%A0%EA%B9%8C)
+- [선착순 쿠폰 시스템에서 Kafka 장애를 어떻게 대응할 것인가](https://velog.io/@wngus4278/%EC%84%A0%EC%B0%A9%EC%88%9C-%EC%BF%A0%ED%8F%B0-%EC%8B%9C%EC%8A%A4%ED%85%9C%EC%97%90%EC%84%9C-Kafka-%EC%9E%A5%EC%95%A0%EB%A5%BC-%EC%96%B4%EB%96%BB%EA%B2%8C-%EB%8C%80%EC%9D%91%ED%95%A0-%EA%B2%83%EC%9D%B8%EA%B0%80)
+
 ## Commit Convention
 
 - feat : 새로운 기능 추가  
