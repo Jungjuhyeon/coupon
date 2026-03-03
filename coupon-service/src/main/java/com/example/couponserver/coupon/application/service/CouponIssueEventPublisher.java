@@ -21,6 +21,8 @@ public class CouponIssueEventPublisher {
                 CouponIssue.createCouponIssueEvent(couponId, memberId, now)
         ).thenAccept(result -> {
             couponCacheOutputPort.remove("coupon:{" + couponId + "}:ready_to_publish", memberId.toString());
+        }).exceptionally(ex -> {
+            return null;
         });
     }
 

@@ -46,12 +46,6 @@ public class CouponIssuedProducer implements EventOutputPort {
                     topic,
                     result.getRecordMetadata().offset());
             return result;
-        }).exceptionally(ex -> {
-            log.error("Unable to send message=[{}] to topic=[{}] due to: {}",
-                    event instanceof CouponIssuedEvent e ? e.getCouponId() : ((CouponIssuedLogEvent) event).getCouponId(),
-                    topic,
-                    ex.getMessage(), ex);
-            return null;
         });
     }
 }
