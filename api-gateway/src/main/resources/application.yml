@@ -42,8 +42,7 @@ spring:
         - id: store-internal
           uri: lb://STORESERVER
           predicates:
-            - Path=/internal/menus/**
-            - Path=/internal/stores/**
+            - Path=/internal/menus/**,/internal/stores/**
 
         # ===============================
         # ORDER SERVICE
@@ -51,7 +50,7 @@ spring:
         - id: order-api
           uri: lb://ORDERSERVER
           predicates:
-            - Path=/api/v1/orders/**
+            - Path=/api/v1/orders/**,/api/v1/statistics/**
 
         # ===============================
         # PAYMENT SERVICE (internal only)
