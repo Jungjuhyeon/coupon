@@ -19,11 +19,12 @@ public class InquiryStatisticsInputPort implements InquiryStatisticsUseCase {
     private final StatisticsOutputPort statisticsOutputPort;
     @Override
     public List<MonthlyOrderStatisticsOutPutDTO> getMonthlyOrderStatistics(LocalDateTime startDate,
-                                                                           LocalDateTime endDate){
+                                                                           LocalDateTime endDate,
+                                                                           Integer price){
         List<LocalDateTime[]> monthRanges = splitByMonth(startDate, endDate);
 
         return monthRanges.parallelStream()
-                .map(range -> statisticsOutputPort.getMonthlyOrderStatistics(range[0], range[1]))
+                .map(range -> statisticsOutputPort.getMonthlyOrderStatistics(range[0], range[1], price))
                 .flatMap(List::stream)
                 .sorted((a, b) -> Integer.compare(a.getMonth(), b.getMonth()))
                 .toList();

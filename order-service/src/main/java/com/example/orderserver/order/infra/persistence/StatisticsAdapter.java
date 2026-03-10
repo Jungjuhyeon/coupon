@@ -14,8 +14,9 @@ public class StatisticsAdapter implements StatisticsOutputPort {
     private final OrderJpaRepository orderJpaRepository;
     @Override
     public List<MonthlyOrderStatisticsOutPutDTO> getMonthlyOrderStatistics(LocalDateTime startDate,
-                                                                           LocalDateTime endDate){
-        return orderJpaRepository.getMonthlyOrderStatistics(startDate,endDate);
+                                                                           LocalDateTime endDate,
+                                                                           Integer price){
+        return orderJpaRepository.getMonthlyOrderStatistics(startDate,endDate,price);
     }
 
 }

@@ -19,13 +19,14 @@ public class StatisticsController {
 
     @GetMapping("/monthly-order")
     public SuccessResponse<List<MonthlyOrderStatisticsOutPutDTO>> getMonthlyOrderStatistics(@RequestParam("startDate") String startDateStr,
-                                                                                            @RequestParam("endDate") String endDateStr) {
+                                                                                            @RequestParam("endDate") String endDateStr,
+                                                                                            @RequestParam("price") Integer price) {
 
         LocalDateTime startDate = LocalDate.parse(startDateStr).atStartOfDay();
         LocalDateTime endDate = LocalDate.parse(endDateStr).atTime(23,59,59);
 
         List<MonthlyOrderStatisticsOutPutDTO> response =
-                inquiryStatisticsUseCase.getMonthlyOrderStatistics(startDate, endDate);
+                inquiryStatisticsUseCase.getMonthlyOrderStatistics(startDate, endDate, price);
         return SuccessResponse.success(response);
     }
 }
