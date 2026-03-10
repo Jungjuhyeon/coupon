@@ -7,20 +7,20 @@ import lombok.Getter;
 @Builder
 public class MonthlyOrderStatisticsOutPutDTO {
     private Integer month;
-    private Long totalOrderCnt; //주문개수
-    private Long totalOrderPrice; //주문 총합
-    private Long totalMenuCnt; //메뉴 개수
-    private Long totalMenuQuantity ; //메뉴총합
+    private Long total_orders; //총 주문 개수
+    private Long total_menu_count; //주문당 총 메뉴 개수
+    private Long total_order_price; //총 주문 가격
+    private Long total_menu_quantity ; //메뉴 총 개수
 
-    public MonthlyOrderStatisticsOutPutDTO mapToDTO(Integer month,Long totalOrderCnt,
-                                                    Long totalOrderPrice,Long totalMenuCnt,
-                                                    Long totalMenuQuantity) {
+    public MonthlyOrderStatisticsOutPutDTO mapToDTO(Integer month,Long total_orders,
+                                                    Long total_menu_count,Long total_order_price,
+                                                    Long total_menu_quantity) {
         return MonthlyOrderStatisticsOutPutDTO.builder()
                 .month(month)
-                .totalMenuCnt(totalOrderCnt)
-                .totalOrderPrice(totalOrderPrice)
-                .totalMenuCnt(totalMenuCnt)
-                .totalMenuQuantity(totalMenuQuantity)
+                .total_orders(total_orders)
+                .total_menu_count(total_menu_count)
+                .total_order_price(total_order_price)
+                .total_menu_quantity(total_menu_quantity)
                 .build();
     }
 }

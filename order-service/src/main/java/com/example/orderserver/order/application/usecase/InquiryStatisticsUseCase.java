@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface InquiryStatisticsUseCase {
     List<MonthlyOrderStatisticsOutPutDTO> getMonthlyOrderStatistics(LocalDateTime startDate,
-                                                                    LocalDateTime endDate);
+                                                                    LocalDateTime endDate,
+                                                                    Integer price);
 }
