@@ -144,18 +144,3 @@ resilience4j:
         ignore-exceptions:
           - feign.FeignException.NotFound
         base-config: default
-member:
-  service:
-    url: http://member-server:8081
-
-store:
-  service:
-    url: http://store-server:8082
-
-coupon:
-  service:
-    url: http://coupon-server:8083
-
-payment:
-  service:
-    url: http://payment-server:8085

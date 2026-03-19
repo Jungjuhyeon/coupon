@@ -5,7 +5,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-@FeignClient(name = "coupon-service", url = "${coupon.service.url}")
+@FeignClient(name = "COUPONSERVER")
 public interface CouponFeignClient {
 
     @GetMapping("/internal/coupon-issues/{couponIssueId}")

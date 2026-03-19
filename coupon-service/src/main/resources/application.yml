@@ -96,8 +96,3 @@ management:
     web:
       exposure:
         include: "*"
-
-member:
-  service:
-    url: http://member-server:8081
-

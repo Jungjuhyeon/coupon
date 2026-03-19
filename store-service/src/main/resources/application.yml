@@ -92,7 +92,3 @@ resilience4j:
     instances:
       member-service:
         base-config: default
-
-member:
-  service:
-    url: http://member-server:8081
