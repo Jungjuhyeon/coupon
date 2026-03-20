@@ -44,6 +44,8 @@ kafka:
       name: coupon_issue
     topic2:
       name: coupon_log
+    topic3:
+      name: orders_created_result
 
   consumer:
     topic1:

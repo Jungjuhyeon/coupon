@@ -12,6 +12,6 @@ public class AddOrderReadModelInputPort implements AddOrderReadModelUseCase {
 
     @Override
     public void addOrderReadModel(com.example.orderserver.order.domain.model.document.OrderReadModel document) {
-        orderReadModelOutputPort.save(document);
+        orderReadModelOutputPort.upsertOrderCreated(document);
     }
 }

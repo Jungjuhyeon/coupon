@@ -59,10 +59,5 @@ public class CouponIssue extends BaseEntity {
         return this.couponIssueStatus == CouponIssueStatus.ISSUED;
     }
 
-    //USED 상태 변경
-    public void useCoupon() {
-        this.couponIssueStatus = CouponIssueStatus.USED;
-    }
-
 
 }

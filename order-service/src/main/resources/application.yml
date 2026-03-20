@@ -63,6 +63,9 @@ kafka:
       name: orders_created
       groupid1: created
       groupid2: created-log
+    topic4:
+      name: orders_created_result
+      groupid: orders_created_result
 
 jwt:
   secret:
