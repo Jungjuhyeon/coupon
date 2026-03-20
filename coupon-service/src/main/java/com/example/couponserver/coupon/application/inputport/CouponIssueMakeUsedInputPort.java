@@ -17,9 +17,10 @@ public class CouponIssueMakeUsedInputPort implements CouponIssueMakeUsedUseCase 
 
     @Override
     public void used(Long couponIssueId) {
-        CouponIssue couponIssue = couponIssueOutputPort.findById(couponIssueId)
-                .orElseThrow(() -> new BusinessException(CouponErrorCode.COUPON_NOT_FOUND));
+        int updated = couponIssueOutputPort.useCoupon(couponIssueId);
 
-        couponIssue.useCoupon();
+        if (updated == 0) {
+            throw new BusinessException(CouponErrorCode.COUPON_ALREADY_USED);
+        }
     }
 }

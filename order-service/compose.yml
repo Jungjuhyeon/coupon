@@ -10,6 +10,7 @@ services:
       - coupons-network
 #    environment:
 #      - SPRING_KAFKA_BOOTSTRAP-SERVERS=kafka-server:9092
+
   # MySQL 서비스
   order-mysql:
     image: mysql:latest
@@ -28,8 +29,6 @@ services:
       interval: 30s
       retries: 5
       start_period: 30s
-      timeout: 10s
-
   order-mongodb:
     image: mongo:latest
     container_name: order-mongodb

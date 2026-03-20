@@ -11,4 +11,6 @@ public interface CouponIssueOutputPort {
 
     Optional<CouponIssue> findById(Long couponIssueId);
 
+    int useCoupon(Long couponIssueId);
+
 }

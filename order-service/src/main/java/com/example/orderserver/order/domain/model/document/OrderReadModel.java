@@ -35,16 +35,22 @@ public class OrderReadModel {
     private Integer discountAmount;
     private Integer finalPrice;
     private LocalDateTime orderTime;
-    private String orderStatus;
 
     private String storeCategoryName;
     private String storeBrandName;
     private String storeName;
 
     private List<OrderMenuDocument> orderMenuList;
+    private String orderStatus;
 
 //    private DiscountType discountType;
 
+    public void cancel() {
+        this.orderStatus = "CANCELLED";
+    }
+    public void complete() {
+        this.orderStatus = "COMPLETED";
+    }
     @Getter
     @Builder
     public static class OrderMenuDocument {

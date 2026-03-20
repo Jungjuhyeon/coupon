@@ -16,8 +16,10 @@ public enum OrderErrorCode implements ErrorCode {
     ORDER_VIEW_RESOURCE_NOT_FOUND(404, "4603", "주문 정보를 조회할 수 없습니다. 연관된 가게 또는 메뉴 정보가 존재하지 않습니다."),
     // coupon apply error (4701 ~)
     COUPON_NOT_FOUND(404, "4701", "해당 쿠폰은 존재하지 않습니다."),
-    COUPON_NOT_APPLICABLE(400, "4703", "해당 쿠폰은 적용할 수 없습니다."),
-    COUPON_SERVICE_UNAVAILABLE(503, "4704", "쿠폰 서비스가 일시적으로 이용 불가능합니다. 잠시 후 다시 시도해주세요."),
+    COUPON_EXPIRED(400, "4702", "쿠폰 사용기간이 아닙니다."),
+    COUPON_ALREADY_USED(409, "4703", "쿠폰을 이미 사용했습니다."),
+    COUPON_NOT_APPLICABLE(400, "4704", "해당 쿠폰은 적용할 수 없습니다."),
+    COUPON_SERVICE_UNAVAILABLE(503, "4705", "쿠폰 서비스가 일시적으로 이용 불가능합니다. 잠시 후 다시 시도해주세요."),
 
     STORE_NOT_FOUND(404, "4801", "해당 가게는 존재하지 않습니다."),
     STORE_SERVICE_UNAVAILABLE(503, "4802", "가게 서비스가 일시적으로 이용 불가능합니다. 잠시 후 다시 시도해주세요."),

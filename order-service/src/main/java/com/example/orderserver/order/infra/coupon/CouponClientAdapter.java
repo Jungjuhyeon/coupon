@@ -22,8 +22,20 @@ public class CouponClientAdapter implements CouponOutputPort {
         return couponFeignClient.getCouponIssue(couponIssueId);
     }
     private CouponIssueInfoFeignDTO couponFallback(Long couponIssueId, Throwable throwable) {
-        if (throwable instanceof FeignException feignEx && feignEx.status() == 404) {
-            throw new BusinessException(OrderErrorCode.COUPON_NOT_FOUND);
+        if (throwable instanceof FeignException feignEx) {
+            int status = feignEx.status();
+
+            switch (status) {
+                case 400: // 기간 만료/전
+                    throw new BusinessException(OrderErrorCode.COUPON_EXPIRED);
+                case 404: // 존재하지 않음
+                    throw new BusinessException(OrderErrorCode.COUPON_NOT_FOUND);
+                case 409: // 이미 사용됨
+                    throw new BusinessException(OrderErrorCode.COUPON_ALREADY_USED);
+                default:
+                    // 다른 4xx, 5xx 에러 처리
+                    throw new BusinessException(OrderErrorCode.COUPON_SERVICE_UNAVAILABLE);
+            }
         }
         throw new BusinessException(OrderErrorCode.COUPON_SERVICE_UNAVAILABLE);
     }

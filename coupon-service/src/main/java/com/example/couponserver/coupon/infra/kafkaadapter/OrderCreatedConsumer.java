@@ -1,8 +1,8 @@
 package com.example.couponserver.coupon.infra.kafkaadapter;
 
 import com.example.couponserver.coupon.application.usecase.CouponIssueMakeUsedUseCase;
-import com.example.couponserver.coupon.domain.model.event.CouponIssuedEvent;
 import com.example.couponserver.coupon.domain.model.event.OrderCreatedEvent;
+import com.example.couponserver.coupon.domain.model.event.OrderCreatedEventResult;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,9 +13,10 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class CouponUsedConsumer {
+public class OrderCreatedConsumer {
     private final ObjectMapper objectMapper;
     private final CouponIssueMakeUsedUseCase couponIssueMakeUsedUseCase;
+    private final OrderCreatedResultProducer orderCreatedResultProducer;
 
     @KafkaListener(
             topics = "${kafka.consumer.topic3.name}",
@@ -25,11 +26,22 @@ public class CouponUsedConsumer {
         OrderCreatedEvent event =
                 objectMapper.readValue(record.value(), OrderCreatedEvent.class);
 
-        if (event.getCouponIssueId() == null) {
-            return; // 쿠폰 미사용 주문
-        }
-        couponIssueMakeUsedUseCase.used(event.getCouponIssueId());
+        OrderCreatedEventResult eventResult = OrderCreatedEventResult.create(event.getOrderId(), event.getMemberId(),event.getCouponIssueId(),event.getEventType());
 
+        // ✅ 쿠폰 없는 경우 → 그냥 성공 처리
+        if (event.getCouponIssueId() == null) {
+            eventResult.success();
+            orderCreatedResultProducer.send(eventResult);
+            return;
+        }
+
+        try {
+            couponIssueMakeUsedUseCase.used(event.getCouponIssueId());
+            eventResult.success();
+        } catch (Exception e) {
+            eventResult.fail();
+        }
+        orderCreatedResultProducer.send(eventResult);
     }
 
 }

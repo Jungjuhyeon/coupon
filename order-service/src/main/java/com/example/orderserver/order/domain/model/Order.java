@@ -91,7 +91,6 @@ public class Order extends BaseEntity {
     }
 
 
-
     // 연관관계 편의 메서드
     public void addOrderMenu(OrderMenu orderMenu) {
         this.orderMenuList.add(orderMenu);
@@ -105,4 +104,18 @@ public class Order extends BaseEntity {
         }
     }
 
+    public void cancel() {
+        this.orderStatus = OrderStatus.CANCELLED;
+
+        for (OrderMenu orderMenu : orderMenuList) {
+            orderMenu.cancel();
+        }
+    }
+    public void complete() {
+        this.orderStatus = OrderStatus.COMPLETED;
+
+        for (OrderMenu orderMenu : orderMenuList) {
+            orderMenu.complete();
+        }
+    }
 }

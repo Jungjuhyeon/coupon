@@ -1,6 +1,7 @@
 package com.example.orderserver.order.domain.model;
 
 import com.example.common.global.entity.BaseEntity;
+import com.example.orderserver.order.domain.model.enumeration.OrderStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -31,12 +32,16 @@ public class OrderMenu extends BaseEntity {
 
     private Integer totalPrice;
 
+    @Enumerated(EnumType.STRING)
+    private OrderStatus orderStatus;
+
     private OrderMenu(Order order, Long menuId, Integer quantity, Integer price, Integer totalPrice) {
         this.order = order;
         this.menuId = menuId;
         this.quantity = quantity;
         this.price = price;
         this.totalPrice = totalPrice;
+        this.orderStatus = OrderStatus.PENDING;
     }
 
     public static OrderMenu create(Order order, Long menuId, Integer menuPrice,Integer quantity){
@@ -47,5 +52,12 @@ public class OrderMenu extends BaseEntity {
     // 연관관계 메서드 (setter 대체)
     public void changeOrder(Order order) {
         this.order = order;
+    }
+
+    public void cancel() {
+        this.orderStatus = OrderStatus.CANCELLED;
+    }
+    public void complete() {
+        this.orderStatus = OrderStatus.COMPLETED;
     }
 }
