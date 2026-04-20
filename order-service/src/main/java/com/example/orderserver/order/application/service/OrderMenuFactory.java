@@ -3,7 +3,7 @@ package com.example.orderserver.order.application.service;
 import com.example.orderserver.order.application.outputport.StoreOutputPort;
 import com.example.orderserver.order.domain.model.Order;
 import com.example.orderserver.order.domain.model.OrderMenu;
-import com.example.orderserver.order.framwork.web.request.OrderMenuInfoDTO;
+import com.example.orderserver.order.framework.web.request.OrderMenuInfoDTO;
 import com.example.orderserver.order.infra.store.dto.response.MenuInfoFeignDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

@@ -3,7 +3,7 @@ package com.example.couponserver.coupon.domain.model;
 
 import com.example.common.global.entity.BaseEntity;
 import com.example.couponserver.coupon.domain.model.enumeration.PromotionStatus;
-import com.example.couponserver.coupon.framwork.web.request.PromotionIdInfoDTO;
+import com.example.couponserver.coupon.framework.web.request.PromotionIdInfoDTO;
 import jakarta.persistence.*;
 import lombok.*;
 

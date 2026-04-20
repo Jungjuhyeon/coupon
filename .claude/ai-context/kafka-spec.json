@@ -1,0 +1,76 @@
+{
+  "kafka": {
+    "bootstrap_servers": "kafka-server:9092",
+    "topics": [
+      {
+        "name": "coupon_issue",
+        "producer": "coupon-service",
+        "consumer": "coupon-service",
+        "description": "선착순 쿠폰 발급 요청 큐. Redis Lua 스크립트 통과 후 발행.",
+        "payload": {
+          "couponId": "Long",
+          "memberId": "Long",
+          "promotionId": "Long"
+        }
+      },
+      {
+        "name": "coupon_log",
+        "producer": "coupon-service",
+        "consumer": "coupon-service",
+        "description": "쿠폰 발급 로그 벌크 처리용 토픽.",
+        "payload": {
+          "couponId": "Long",
+          "memberId": "Long",
+          "issuedAt": "LocalDateTime"
+        }
+      },
+      {
+        "name": "orders_created",
+        "producer": "order-service (Outbox 패턴)",
+        "consumers": [
+          "coupon-service: 쿠폰 USED 처리 후 orders_created_result 발행 (Saga)",
+          "order-service/OrderCreatedConsumer (groupid1): MongoDB OrderReadModel 생성 (STORESERVER Feign 조회 포함)"
+        ],
+        "internal_consumer": "order-service/OrderCreatedOutboxInternalConsumer (groupid2): Outbox 상태를 MESSAGE_CONSUME으로 갱신. 외부 서비스 아님, 같은 토픽을 다른 groupId로 중복 소비.",
+        "description": "주문 생성 완료 이벤트. 3개의 그룹이 소비 — coupon-service(Saga), order-service groupid1(ReadModel), order-service groupid2(Outbox 상태 갱신).",
+        "payload": {
+          "orderId": "Long",
+          "memberId": "Long",
+          "couponIssueId": "Long | null (쿠폰 없으면 null)",
+          "eventType": "String (ORDER_CREATED)"
+        }
+      },
+      {
+        "name": "orders_created_result",
+        "producer": "coupon-service",
+        "consumer": "order-service",
+        "description": "쿠폰 사용 처리 결과. 성공 시 주문 COMPLETED, 실패 시 CANCELLED(보상).",
+        "payload": {
+          "orderId": "Long",
+          "memberId": "Long",
+          "couponIssueId": "Long | null",
+          "eventType": "String (ORDER_COUPON_SUCCESS | ORDER_COUPON_FAIL)"
+        }
+      }
+    ]
+  },
+  "patterns": {
+    "outbox": {
+      "description": "order-service의 주문 트랜잭션과 Kafka 발행 원자성 보장",
+      "steps": [
+        "1. OrderOutboxSaver (BEFORE_COMMIT): 동일 트랜잭션에서 OutboxEvent를 DB 저장",
+        "2. OrderOutboxPublisher (AFTER_COMMIT): 커밋 후 Kafka 전송",
+        "3. OutboxRetryScheduler: 10초마다 READY_TO_PUBLISH 상태 이벤트 재시도"
+      ]
+    },
+    "saga": {
+      "type": "Choreography",
+      "description": "쿠폰 사용 확정 Saga",
+      "flow": [
+        "1. order-service → orders_created 발행",
+        "2. coupon-service 수신 → 쿠폰 USED 처리 → orders_created_result 발행",
+        "3. order-service 수신 → 성공: COMPLETED / 실패: CANCELLED (보상 트랜잭션)"
+      ]
+    }
+  }
+}

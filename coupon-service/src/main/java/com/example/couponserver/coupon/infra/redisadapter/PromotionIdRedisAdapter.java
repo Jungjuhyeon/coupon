@@ -2,7 +2,7 @@ package com.example.couponserver.coupon.infra.redisadapter;
 
 import com.example.couponserver.coupon.application.outputport.PromotionCacheOutputPort;
 import com.example.couponserver.coupon.domain.model.cache.PromotionCache;
-import com.example.couponserver.coupon.framwork.web.request.PromotionIdInfoDTO;
+import com.example.couponserver.coupon.framework.web.request.PromotionIdInfoDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;

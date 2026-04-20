@@ -1,6 +1,6 @@
 package com.example.memberserver.member.infra.persistence;
 
-import com.example.memberserver.member.applicaion.outputport.MemberOutputPort;
+import com.example.memberserver.member.application.outputport.MemberOutputPort;
 import com.example.memberserver.member.domain.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;

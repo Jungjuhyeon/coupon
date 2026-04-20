@@ -1,0 +1,21 @@
+package com.example.memberserver.member.framework.web.response;
+
+import com.example.memberserver.member.domain.Member;
+import lombok.Builder;
+import lombok.Getter;
+
+@Getter
+@Builder
+public class MemberLoginOutputDTO {
+    private Long id;
+    private String email;
+    private String accessToken;
+
+    public static MemberLoginOutputDTO mapToDTO(Member member, String accessToken){
+        return MemberLoginOutputDTO.builder()
+                .id(member.getId())
+                .email(member.getEmail())
+                .accessToken(accessToken)
+                .build();
+    }
+}

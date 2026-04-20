@@ -1,7 +1,7 @@
 package com.example.storeserver.store.application.usecase;
 
-import com.example.storeserver.store.framwork.web.request.StoreInfoDTO;
-import com.example.storeserver.store.framwork.web.response.StoreIdOutputDTO;
+import com.example.storeserver.store.framework.web.request.StoreInfoDTO;
+import com.example.storeserver.store.framework.web.response.StoreIdOutputDTO;
 
 public interface AddStoreUseCase {
     StoreIdOutputDTO create(Long memberId, StoreInfoDTO request);

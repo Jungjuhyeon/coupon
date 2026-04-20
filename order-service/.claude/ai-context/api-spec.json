@@ -1,0 +1,47 @@
+{
+  "service": "order-service",
+  "note": "JWT에서 추출한 memberId를 @AuthenticationPrincipal AuthPrincipal로 사용",
+  "endpoints": [
+    {
+      "access": "external",
+      "method": "POST",
+      "path": "/api/v1/orders/create/{storeId}",
+      "path_params": { "storeId": "Long" },
+      "request_body": {
+        "couponIssueId": "Long | null",
+        "orderMenuInfoDTOList": [{ "menuId": "Long", "count": "Integer" }],
+        "deliveryAddress": "String",
+        "comment": "String"
+      },
+      "response": "SuccessResponse<OrderOutputDTO { orderId }>",
+      "description": "주문 생성. Saga 시작 (Outbox → Kafka orders_created 발행)."
+    },
+    {
+      "access": "external",
+      "method": "GET",
+      "path": "/api/v1/orders/{orderId}",
+      "path_params": { "orderId": "Long" },
+      "response": "SuccessResponse<OrderInfoOutPutDTO>",
+      "description": "주문 상세 조회 (MySQL)"
+    },
+    {
+      "access": "external",
+      "method": "GET",
+      "path": "/api/v1/orders",
+      "response": "SuccessResponse<List<OrderReadModel>>",
+      "description": "내 주문 목록 조회 (MongoDB 읽기 모델)"
+    },
+    {
+      "access": "external",
+      "method": "GET",
+      "path": "/api/v1/statistics/monthly-order",
+      "params": {
+        "startDate": "String (yyyy-MM-dd)",
+        "endDate": "String (yyyy-MM-dd)",
+        "price": "Integer"
+      },
+      "response": "SuccessResponse<List<MonthlyOrderStatisticsOutPutDTO>>",
+      "description": "월별 주문 통계 조회"
+    }
+  ]
+}

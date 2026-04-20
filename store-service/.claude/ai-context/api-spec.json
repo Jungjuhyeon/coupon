@@ -1,0 +1,71 @@
+{
+  "service": "store-service",
+  "eureka_name": "STORESERVER",
+  "port": 8082,
+  "endpoints": [
+    {
+      "access": "external",
+      "method": "POST",
+      "path": "/api/v1/stores/create",
+      "auth": true,
+      "request_body": {
+        "storeCategoryId": "Long",
+        "brandId": "Long",
+        "name": "String",
+        "phone": "String",
+        "address": "String"
+      },
+      "response": "SuccessResponse<StoreIdOutputDTO { storeId }>",
+      "description": "가게 등록. JWT memberId를 ownerId로 사용. MEMBERSERVER Feign으로 점주 존재 확인."
+    },
+    {
+      "access": "external",
+      "method": "GET",
+      "path": "/api/v1/stores/{storeId}",
+      "auth": true,
+      "response": "SuccessResponse<StoreInfoOutputDTO>",
+      "description": "가게 상세 조회. MEMBERSERVER Feign으로 점주 정보 포함."
+    },
+    {
+      "access": "external",
+      "method": "POST",
+      "path": "/api/v1/menus/create",
+      "auth": true,
+      "request_body": {
+        "storeId": "Long",
+        "list": [{ "menuCategoryId": "Long", "name": "String", "price": "Integer" }]
+      },
+      "response": "SuccessResponse<MenuOutputDTO>",
+      "description": "메뉴 일괄 등록"
+    },
+    {
+      "access": "internal",
+      "method": "GET",
+      "path": "/internal/stores/{storeId}",
+      "auth": false,
+      "response": "boolean",
+      "caller": "order-service",
+      "description": "가게 존재 여부 확인"
+    },
+    {
+      "access": "internal",
+      "method": "GET",
+      "path": "/internal/stores/{storeId}/order-view",
+      "auth": false,
+      "params": { "menuIds": "List<Long>" },
+      "response": "StoreOrderViewFeignDTO { storeName, brandName, categoryName, menuOrderViewFeignDTOList }",
+      "caller": "order-service",
+      "description": "주문용 가게+메뉴 뷰 (MongoDB OrderReadModel 생성에 사용)"
+    },
+    {
+      "access": "internal",
+      "method": "GET",
+      "path": "/internal/menus",
+      "auth": false,
+      "params": { "menuIds": "List<Long>" },
+      "response": "List<MenuInfoFeignDTO { menuId, price }>",
+      "caller": "order-service",
+      "description": "메뉴 가격 목록 조회 (주문 메뉴 가격 계산에 사용)"
+    }
+  ]
+}

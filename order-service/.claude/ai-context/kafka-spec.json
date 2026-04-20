@@ -1,0 +1,16 @@
+{
+  "produce": [
+    {
+      "topic": "orders_created",
+      "trigger": "주문 생성 트랜잭션 커밋 후 (Outbox 패턴: BEFORE_COMMIT DB 저장 → AFTER_COMMIT 발행)",
+      "payload": "OrderCreatedEvent { orderId, memberId, couponIssueId, eventType }"
+    }
+  ],
+  "consume": [
+    {
+      "topic": "orders_created_result",
+      "action": "successed=true → CompensationInputPort.successOrder() → COMPLETED, successed=false → cancleOrder() → CANCELLED",
+      "note": "cancleOrder 오탈자 — 수정 금지"
+    }
+  ]
+}

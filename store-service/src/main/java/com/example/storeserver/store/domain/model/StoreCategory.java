@@ -20,5 +20,5 @@ public class StoreCategory extends BaseEntity {
 
     private String name;
 
-
+    
 }

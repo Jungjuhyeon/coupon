@@ -11,7 +11,7 @@ public interface MemberFeignClient {
     @GetMapping("/internal/members/{memberId}")
     boolean existsById(@PathVariable("memberId") Long memberId);
 
-    @GetMapping("internal/members/profile/{memberId}")
+    @GetMapping("/internal/members/profile/{memberId}")
     @Bulkhead(name = "store-circuit-breaker")
     MemberProfileFeignDTO getMemberProfile(@PathVariable Long memberId);
 }

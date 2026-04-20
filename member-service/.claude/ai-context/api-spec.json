@@ -1,0 +1,39 @@
+{
+  "service": "member-service",
+  "eureka_name": "MEMBERSERVER",
+  "port": 8081,
+  "endpoints": [
+    {
+      "access": "external",
+      "method": "POST",
+      "path": "/api/v1/members/signup",
+      "auth": false,
+      "request_body": { "email": "String", "name": "String", "password": "String", "phone": "String" },
+      "response": "SuccessResponse<MemberOutPutDTO>",
+      "description": "회원 가입"
+    },
+    {
+      "access": "external",
+      "method": "POST",
+      "path": "/api/v1/members/login",
+      "auth": false,
+      "request_body": { "email": "String", "password": "String" },
+      "response": "SuccessResponse<MemberLoginOutputDTO>",
+      "description": "로그인, JWT 토큰 발급"
+    },
+    {
+      "access": "internal",
+      "method": "GET",
+      "path": "/internal/members/{memberId}",
+      "response": "boolean",
+      "description": "회원 존재 여부 확인 (order/coupon/store-service에서 호출)"
+    },
+    {
+      "access": "internal",
+      "method": "GET",
+      "path": "/internal/members/profile/{memberId}",
+      "response": "MemberProfileFeignDTO { memberId, name, email }",
+      "description": "회원 프로필 조회 (order-service에서 호출)"
+    }
+  ]
+}

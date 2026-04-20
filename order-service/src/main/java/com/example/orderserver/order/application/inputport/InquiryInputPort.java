@@ -10,7 +10,7 @@ import com.example.orderserver.order.domain.model.Order;
 import com.example.orderserver.order.domain.model.OrderMenu;
 import com.example.orderserver.order.domain.model.document.OrderReadModel;
 import com.example.orderserver.order.exception.OrderErrorCode;
-import com.example.orderserver.order.framwork.web.response.OrderInfoOutPutDTO;
+import com.example.orderserver.order.framework.web.response.OrderInfoOutPutDTO;
 import com.example.orderserver.order.infra.store.dto.response.StoreOrderViewFeignDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

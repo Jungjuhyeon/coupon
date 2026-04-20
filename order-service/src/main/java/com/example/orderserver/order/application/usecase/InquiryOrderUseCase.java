@@ -2,7 +2,7 @@ package com.example.orderserver.order.application.usecase;
 
 import com.example.orderserver.order.domain.model.Order;
 import com.example.orderserver.order.domain.model.document.OrderReadModel;
-import com.example.orderserver.order.framwork.web.response.OrderInfoOutPutDTO;
+import com.example.orderserver.order.framework.web.response.OrderInfoOutPutDTO;
 
 import java.util.List;
 

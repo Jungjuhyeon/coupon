@@ -4,7 +4,7 @@ package com.example.couponserver.coupon.domain.model;
 import com.example.common.global.entity.BaseEntity;
 import com.example.couponserver.coupon.domain.model.enumeration.CouponStatus;
 import com.example.couponserver.coupon.domain.model.enumeration.DiscountType;
-import com.example.couponserver.coupon.framwork.web.request.CouponInfoDTO;
+import com.example.couponserver.coupon.framework.web.request.CouponInfoDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
