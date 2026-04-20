@@ -1,7 +1,7 @@
 package com.example.orderserver.order.infra.persistence;
 
 import com.example.orderserver.order.application.outputport.StatisticsOutputPort;
-import com.example.orderserver.order.framwork.web.response.MonthlyOrderStatisticsOutPutDTO;
+import com.example.orderserver.order.framework.web.response.MonthlyOrderStatisticsOutPutDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

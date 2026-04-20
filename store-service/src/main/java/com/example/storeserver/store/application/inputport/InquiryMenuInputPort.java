@@ -6,7 +6,7 @@ import com.example.storeserver.store.application.outputport.MenuOutputPort;
 import com.example.storeserver.store.application.usecase.InquiryMenuUseCase;
 import com.example.storeserver.store.domain.model.Menu;
 import com.example.storeserver.store.exception.StoreErrorCode;
-import com.example.storeserver.store.framwork.web.response.MenuInfoFeignDTO;
+import com.example.storeserver.store.framework.web.response.MenuInfoFeignDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -4,8 +4,8 @@ import com.example.couponserver.coupon.application.outputport.PromotionCacheOutp
 import com.example.couponserver.coupon.application.outputport.PromotionOutputPort;
 import com.example.couponserver.coupon.application.usecase.AddPromotionUseCase;
 import com.example.couponserver.coupon.domain.model.Promotion;
-import com.example.couponserver.coupon.framwork.web.request.PromotionIdInfoDTO;
-import com.example.couponserver.coupon.framwork.web.response.PromotionOutPutDTO;
+import com.example.couponserver.coupon.framework.web.request.PromotionIdInfoDTO;
+import com.example.couponserver.coupon.framework.web.response.PromotionOutPutDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

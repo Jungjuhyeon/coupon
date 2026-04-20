@@ -1,6 +1,6 @@
 package com.example.orderserver.order.application.outputport;
 
-import com.example.orderserver.order.framwork.web.response.MonthlyOrderStatisticsOutPutDTO;
+import com.example.orderserver.order.framework.web.response.MonthlyOrderStatisticsOutPutDTO;
 
 import java.time.LocalDateTime;
 import java.util.List;

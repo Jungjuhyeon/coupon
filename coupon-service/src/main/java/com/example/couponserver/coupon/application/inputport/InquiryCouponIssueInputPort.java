@@ -5,7 +5,7 @@ import com.example.couponserver.coupon.application.outputport.CouponIssueOutputP
 import com.example.couponserver.coupon.application.usecase.InquiryCouponIssueUseCase;
 import com.example.couponserver.coupon.domain.model.CouponIssue;
 import com.example.couponserver.coupon.exception.CouponErrorCode;
-import com.example.couponserver.coupon.framwork.web.response.CouponIssueOrderFeignDTO;
+import com.example.couponserver.coupon.framework.web.response.CouponIssueOrderFeignDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

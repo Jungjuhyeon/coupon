@@ -1,0 +1,58 @@
+{
+  "service": "coupon-service",
+  "eureka_name": "COUPONSERVER",
+  "port": 8083,
+  "endpoints": [
+    {
+      "access": "external",
+      "method": "POST",
+      "path": "/api/v1/coupons/issue",
+      "auth": true,
+      "params": { "promotionId": "Long", "couponId": "Long", "memberId": "Long" },
+      "response": "SuccessResponse<String>",
+      "description": "선착순 쿠폰 발급. PromotionValidator → CouponValidator → CouponIssuer(Lua) → publishEvent 순서"
+    },
+    {
+      "access": "external",
+      "method": "POST",
+      "path": "/api/v1/coupons/create",
+      "auth": true,
+      "request_body": {
+        "promotionId": "Long",
+        "discountType": "DiscountType (PERCENTAGE|FIXED_AMOUNT|FREE_SHIPPING|FIRST_PURCHASE)",
+        "discountValue": "Integer",
+        "maxQuantity": "Integer",
+        "startDate": "yyyy-MM-dd",
+        "endDate": "yyyy-MM-dd",
+        "usageStartDateTime": "yyyy-MM-dd HH:mm:ss",
+        "usageEndDateTime": "yyyy-MM-dd HH:mm:ss"
+      },
+      "response": "SuccessResponse<CouponOutPutDTO>",
+      "description": "쿠폰 정책 생성. 생성 시 couponstatus=ISSUED."
+    },
+    {
+      "access": "external",
+      "method": "POST",
+      "path": "/api/v1/promotions/create",
+      "auth": true,
+      "request_body": {
+        "name": "String",
+        "startDateTime": "LocalDateTime",
+        "endDateTime": "LocalDateTime",
+        "dailyStartTime": "LocalTime",
+        "dailyEndTime": "LocalTime"
+      },
+      "response": "SuccessResponse<PromotionOutPutDTO>",
+      "description": "프로모션 생성. 생성 시 promotionStatus=START."
+    },
+    {
+      "access": "internal",
+      "method": "GET",
+      "path": "/internal/coupon-issues/{couponIssueId}",
+      "auth": false,
+      "response": "CouponIssueOrderFeignDTO { couponIssueId: Long, discountValue: int }",
+      "caller": "order-service",
+      "description": "주문 생성 시 쿠폰 발급 내역의 할인값 조회"
+    }
+  ]
+}

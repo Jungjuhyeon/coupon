@@ -1,8 +1,8 @@
 package com.example.orderserver.order.application.assembler;
 
 import com.example.orderserver.order.domain.model.Order;
-import com.example.orderserver.order.framwork.web.response.OrderInfoOutPutDTO;
-import com.example.orderserver.order.framwork.web.response.OrderMenuOutputDTO;
+import com.example.orderserver.order.framework.web.response.OrderInfoOutPutDTO;
+import com.example.orderserver.order.framework.web.response.OrderMenuOutputDTO;
 import com.example.orderserver.order.infra.store.dto.response.MenuOrderViewFeignDTO;
 import com.example.orderserver.order.infra.store.dto.response.StoreOrderViewFeignDTO;
 import org.springframework.stereotype.Component;

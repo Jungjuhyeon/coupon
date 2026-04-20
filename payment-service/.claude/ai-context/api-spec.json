@@ -1,0 +1,17 @@
+{
+  "service": "payment-service",
+  "endpoints": [
+    {
+      "access": "internal",
+      "method": "POST",
+      "path": "/internal/payments/create",
+      "request_body": {
+        "orderId": "Long",
+        "amount": "Integer"
+      },
+      "response": "void",
+      "caller": "order-service",
+      "description": "주문 생성 완료 후 결제 내역 저장. addPaymentUsecase.create() 호출."
+    }
+  ]
+}

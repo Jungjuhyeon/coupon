@@ -1,7 +1,7 @@
 package com.example.orderserver.order.infra.persistence;
 
 import com.example.orderserver.order.domain.model.Order;
-import com.example.orderserver.order.framwork.web.response.MonthlyOrderStatisticsOutPutDTO;
+import com.example.orderserver.order.framework.web.response.MonthlyOrderStatisticsOutPutDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface OrderJpaRepository extends JpaRepository<Order, Long> {
     @Query("""
-        SELECT new com.example.orderserver.order.framwork.web.response.MonthlyOrderStatisticsOutPutDTO(
+        SELECT new com.example.orderserver.order.framework.web.response.MonthlyOrderStatisticsOutPutDTO(
             FUNCTION('MONTH', o.orderTime),
             COUNT(DISTINCT o.id),    
             COUNT(om.menuId),        

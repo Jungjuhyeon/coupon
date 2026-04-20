@@ -1,0 +1,12 @@
+{
+  "produce": [
+    { "topic": "coupon_issue",           "trigger": "Redis Lua 성공(result=1) 후", "payload": "CouponIssuedEvent { couponId, memberId, currentTime }" },
+    { "topic": "coupon_log",             "trigger": "발급 성공/실패 모든 경우",      "payload": "CouponIssuedLogEvent { couponId, memberId, issueDateTime, eventType }" },
+    { "topic": "orders_created_result",  "trigger": "Saga — CouponIssue USED 처리 후", "payload": "OrderCreatedEventResult { orderId, memberId, couponIssueId, eventType, successed }" }
+  ],
+  "consume": [
+    { "topic": "coupon_issue", "action": "MySQL에 CouponIssue 저장 (AddCouponIssueInputPort)" },
+    { "topic": "coupon_log",   "action": "CouponIssueLog 벌크 저장 (AddCouponIssueLogInputPort)" },
+    { "topic": "orders_created", "action": "couponIssueId로 USED 처리 → orders_created_result 발행 (CouponIssueMakeUsedInputPort)" }
+  ]
+}

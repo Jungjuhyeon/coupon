@@ -1,0 +1,17 @@
+{
+  "api_gateway": {
+    "port": 9001,
+    "jwt_filter": {
+      "algorithm": "HMAC512",
+      "whitelist": ["/api/v1/members/login", "/api/v1/members/signup"],
+      "note": "whitelist 외 모든 경로 JWT 필수. 검증 후 X-USER-ID, X-USER-ROLE 헤더를 추가해 downstream 전달."
+    }
+  },
+  "routes": [
+    { "service": "MEMBERSERVER",  "external": ["/api/v1/members/**"],                           "internal": ["/internal/members/**"]         },
+    { "service": "STORESERVER",   "external": ["/api/v1/stores/**", "/api/v1/menus/**"],        "internal": ["/internal/stores/**", "/internal/menus/**"] },
+    { "service": "COUPONSERVER",  "external": ["/api/v1/coupons/**", "/api/v1/promotions/**"],  "internal": ["/internal/coupon-issues/**"]   },
+    { "service": "ORDERSERVER",   "external": ["/api/v1/orders/**", "/api/v1/statistics/**"],   "internal": []                               },
+    { "service": "PAYMENTSERVER", "external": [],                                                "internal": ["/internal/payments/**"]        }
+  ]
+}
