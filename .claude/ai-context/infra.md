@@ -28,12 +28,22 @@ Redis Cluster: 6노드(`redis-node-1~6`), 분산 락은 Redisson 사용
 ## 기동 순서
 
 ```bash
-# 1. 인프라
+# 1. 네트워크 생성 (최초 1회)
 docker network create coupons-network
-cd infra && docker-compose -f compose.yml up -d        # Kafka, Redis Cluster
-cd {service} && docker-compose -f compose.yml up -d    # 서비스별 MySQL
 
-# 2. 앱 (순서 중요)
+# 2. 공통 인프라 (Kafka, Redis Cluster)
+cd infra && docker compose -f compose.yml up -d
+
+# 3. 서비스별 Docker Compose
+cd discovery-server && docker compose -f compose.yml up -d
+cd api-gateway      && docker compose -f compose.yml up -d
+cd member-service   && docker compose -f compose.yml up -d
+cd store-service    && docker compose -f compose.yml up -d
+cd coupon-service   && docker compose -f compose.yml up -d
+cd order-service    && docker compose -f compose.yml up -d
+cd payment-service  && docker compose -f compose.yml up -d
+
+# 4. 앱 (순서 중요)
 ./gradlew :discovery-server:bootRun
 ./gradlew :api-gateway:bootRun
 ./gradlew :{service}:bootRun                           # 나머지 순서 무관
