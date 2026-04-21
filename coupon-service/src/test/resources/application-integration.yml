@@ -1,0 +1,5 @@
+spring:
+  data:
+    redis:
+      cluster:
+        nodes: ~   # cluster 모드 비활성화 → standalone 으로 전환

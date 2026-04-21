@@ -12,6 +12,11 @@ repositories {
 dependencies {
     implementation project(":common")
 
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation platform('org.testcontainers:testcontainers-bom:1.19.8')
+    testImplementation 'org.testcontainers:junit-jupiter'
+    testImplementation 'org.testcontainers:mysql'
+
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -37,7 +42,7 @@ test {
     useJUnitPlatform()
 }
 tasks.named('jar') {
-    enabled = false  // plain jar 비활성화
+    enabled = true   // test classpath 접근을 위해 활성화
 }
 
 tasks.named('bootJar') {
