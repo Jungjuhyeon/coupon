@@ -17,9 +17,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -52,30 +54,30 @@ class AddCouponInputPortTest {
         LocalDateTime usageStart = LocalDateTime.now();
         LocalDateTime usageEnd = LocalDateTime.now().plusDays(7);
 
-        CouponInfoDTO couponInfoDTO = mock(CouponInfoDTO.class);
-        when(couponInfoDTO.getPromotionId()).thenReturn(1L);
-        when(couponInfoDTO.getDiscountType()).thenReturn(DiscountType.FIXED_AMOUNT);
-        when(couponInfoDTO.getDiscountValue()).thenReturn(1000);
-        when(couponInfoDTO.getMaxQuantity()).thenReturn(100);
-        when(couponInfoDTO.getStartDate()).thenReturn(startDate);
-        when(couponInfoDTO.getEndDate()).thenReturn(endDate);
-        when(couponInfoDTO.getUsageStartDateTime()).thenReturn(usageStart);
-        when(couponInfoDTO.getUsageEndDateTime()).thenReturn(usageEnd);
+        // CouponInfoDTO: private 필드만 있으므로 ReflectionTestUtils로 직접 설정
+        CouponInfoDTO couponInfoDTO = new CouponInfoDTO();
+        ReflectionTestUtils.setField(couponInfoDTO, "promotionId", 1L);
+        ReflectionTestUtils.setField(couponInfoDTO, "discountType", DiscountType.FIXED_AMOUNT);
+        ReflectionTestUtils.setField(couponInfoDTO, "discountValue", 1000);
+        ReflectionTestUtils.setField(couponInfoDTO, "maxQuantity", 100);
+        ReflectionTestUtils.setField(couponInfoDTO, "startDate", startDate);
+        ReflectionTestUtils.setField(couponInfoDTO, "endDate", endDate);
+        ReflectionTestUtils.setField(couponInfoDTO, "usageStartDateTime", usageStart);
+        ReflectionTestUtils.setField(couponInfoDTO, "usageEndDateTime", usageEnd);
 
-        Promotion mockPromotion = mock(Promotion.class);
-        when(promotionOutputPort.findById(1L)).thenReturn(Optional.of(mockPromotion));
+        // Promotion: builder로 실제 도메인 객체 생성
+        Promotion promotion = Promotion.builder()
+                .name("테스트 프로모션")
+                .startDateTime(usageStart.minusHours(1))
+                .endDateTime(usageEnd)
+                .dailyStartTime(LocalTime.of(0, 0))
+                .dailyEndTime(LocalTime.of(23, 59))
+                .build();
+        when(promotionOutputPort.findById(1L)).thenReturn(Optional.of(promotion));
 
-        Coupon mockSavedCoupon = mock(Coupon.class);
-        when(mockSavedCoupon.getPromotion()).thenReturn(mockPromotion);
-        when(mockPromotion.getId()).thenReturn(1L);
-        when(mockSavedCoupon.getDiscountType()).thenReturn(DiscountType.FIXED_AMOUNT);
-        when(mockSavedCoupon.getDiscountValue()).thenReturn(1000);
-        when(mockSavedCoupon.getMaxQuantity()).thenReturn(100);
-        when(mockSavedCoupon.getStartDate()).thenReturn(startDate);
-        when(mockSavedCoupon.getEndDate()).thenReturn(endDate);
-        when(mockSavedCoupon.getUsageStartDateTime()).thenReturn(usageStart);
-        when(mockSavedCoupon.getUsageEndDateTime()).thenReturn(usageEnd);
-        when(couponOutputPort.save(any(Coupon.class))).thenReturn(mockSavedCoupon);
+        // Coupon: 실제 도메인 객체 생성 (factory method 사용)
+        Coupon savedCoupon = Coupon.create(promotion, couponInfoDTO);
+        when(couponOutputPort.save(any(Coupon.class))).thenReturn(savedCoupon);
 
         doNothing().when(couponCacheOutputPort).saveCouponData(any(), anyInt(), any(), any());
 
@@ -84,6 +86,11 @@ class AddCouponInputPortTest {
 
         // then
         assertThat(result).isNotNull();
+        assertThat(result.getDiscountType()).isEqualTo(DiscountType.FIXED_AMOUNT);
+        assertThat(result.getDiscountValue()).isEqualTo(1000);
+        assertThat(result.getMaxQuantity()).isEqualTo(100);
+        assertThat(result.getStartDate()).isEqualTo(startDate);
+        assertThat(result.getEndDate()).isEqualTo(endDate);
         verify(couponOutputPort).save(any(Coupon.class));
         verify(couponCacheOutputPort).saveCouponData(any(), anyInt(), any(), any());
     }
@@ -92,8 +99,8 @@ class AddCouponInputPortTest {
     @DisplayName("존재하지 않는 프로모션으로 쿠폰 등록 실패")
     void addCoupon_fail_when_promotion_not_found() {
         // given
-        CouponInfoDTO couponInfoDTO = mock(CouponInfoDTO.class);
-        when(couponInfoDTO.getPromotionId()).thenReturn(999L);
+        CouponInfoDTO couponInfoDTO = new CouponInfoDTO();
+        ReflectionTestUtils.setField(couponInfoDTO, "promotionId", 999L);
         when(promotionOutputPort.findById(999L)).thenReturn(Optional.empty());
 
         // when & then

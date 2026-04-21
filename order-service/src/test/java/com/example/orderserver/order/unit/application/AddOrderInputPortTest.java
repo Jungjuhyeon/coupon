@@ -22,6 +22,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.List;
 
@@ -64,23 +65,28 @@ class AddOrderInputPortTest {
         Long memberId = 1L;
         Long storeId = 1L;
 
-        OrderMenuInfoDTO menuInfoDTO = mock(OrderMenuInfoDTO.class);
+        // OrderMenuInfoDTO: private 필드만 있으므로 ReflectionTestUtils 사용
+        OrderMenuInfoDTO menuInfoDTO = new OrderMenuInfoDTO();
+        ReflectionTestUtils.setField(menuInfoDTO, "menuId", 1L);
+        ReflectionTestUtils.setField(menuInfoDTO, "count", 2);
 
-        OrderInputDTO request = mock(OrderInputDTO.class);
-        when(request.getCouponIssueId()).thenReturn(null);
-        when(request.getDeliveryAddress()).thenReturn("서울시 강남구");
-        when(request.getComment()).thenReturn("문 앞에 놔주세요");
-        when(request.getOrderMenuInfoDTOList()).thenReturn(List.of(menuInfoDTO));
+        // OrderInputDTO: private 필드만 있으므로 ReflectionTestUtils 사용
+        OrderInputDTO request = new OrderInputDTO();
+        ReflectionTestUtils.setField(request, "couponIssueId", null);
+        ReflectionTestUtils.setField(request, "deliveryAddress", "서울시 강남구");
+        ReflectionTestUtils.setField(request, "comment", "문 앞에 놔주세요");
+        ReflectionTestUtils.setField(request, "orderMenuInfoDTOList", List.of(menuInfoDTO));
 
         doNothing().when(memberOutputPort).validateMember(memberId);
         doNothing().when(storeOutputPort).validateStore(storeId);
         when(couponApplier.loadCouponIfExists(null)).thenReturn(null);
 
-        OrderMenu mockMenu = OrderMenu.create(mock(Order.class), 1L, 10000, 2);
-        when(orderFactory.createOrderMenus(any(Order.class), any())).thenReturn(List.of(mockMenu));
-        doNothing().when(couponApplier).applyPricing(any(Order.class), isNull());
+        // OrderMenu: 실제 Order 도메인 객체 사용 (factory method)
+        Order dummyOrder = Order.create(memberId, storeId, "서울시 강남구", "문 앞에 놔주세요");
+        OrderMenu orderMenu = OrderMenu.create(dummyOrder, 1L, 10000, 2);
+        when(orderFactory.createOrderMenus(any(Order.class), any())).thenReturn(List.of(orderMenu));
 
-        when(orderOutputPort.save(any(Order.class))).thenReturn(mock(Order.class));
+        doNothing().when(couponApplier).applyPricing(any(Order.class), isNull());
         doNothing().when(paymentOutputPort).save(any(), any());
         doNothing().when(orderEventPublisher).publishOrderCreated(any(Order.class), any(Long.class));
 
@@ -101,13 +107,15 @@ class AddOrderInputPortTest {
         Long storeId = 1L;
         Long couponIssueId = 10L;
 
-        OrderMenuInfoDTO menuInfoDTO = mock(OrderMenuInfoDTO.class);
+        OrderMenuInfoDTO menuInfoDTO = new OrderMenuInfoDTO();
+        ReflectionTestUtils.setField(menuInfoDTO, "menuId", 1L);
+        ReflectionTestUtils.setField(menuInfoDTO, "count", 1);
 
-        OrderInputDTO request = mock(OrderInputDTO.class);
-        when(request.getCouponIssueId()).thenReturn(couponIssueId);
-        when(request.getDeliveryAddress()).thenReturn("서울시 강남구");
-        when(request.getComment()).thenReturn("빠르게 부탁드려요");
-        when(request.getOrderMenuInfoDTOList()).thenReturn(List.of(menuInfoDTO));
+        OrderInputDTO request = new OrderInputDTO();
+        ReflectionTestUtils.setField(request, "couponIssueId", couponIssueId);
+        ReflectionTestUtils.setField(request, "deliveryAddress", "서울시 강남구");
+        ReflectionTestUtils.setField(request, "comment", "빠르게 부탁드려요");
+        ReflectionTestUtils.setField(request, "orderMenuInfoDTOList", List.of(menuInfoDTO));
 
         CouponIssueInfoFeignDTO couponInfo = new CouponIssueInfoFeignDTO(couponIssueId, 3000);
 
@@ -115,11 +123,11 @@ class AddOrderInputPortTest {
         doNothing().when(storeOutputPort).validateStore(storeId);
         when(couponApplier.loadCouponIfExists(couponIssueId)).thenReturn(couponInfo);
 
-        OrderMenu mockMenu = OrderMenu.create(mock(Order.class), 1L, 10000, 1);
-        when(orderFactory.createOrderMenus(any(Order.class), any())).thenReturn(List.of(mockMenu));
-        doNothing().when(couponApplier).applyPricing(any(Order.class), eq(couponInfo));
+        Order dummyOrder = Order.create(memberId, storeId, "서울시 강남구", "빠르게 부탁드려요");
+        OrderMenu orderMenu = OrderMenu.create(dummyOrder, 1L, 10000, 1);
+        when(orderFactory.createOrderMenus(any(Order.class), any())).thenReturn(List.of(orderMenu));
 
-        when(orderOutputPort.save(any(Order.class))).thenReturn(mock(Order.class));
+        doNothing().when(couponApplier).applyPricing(any(Order.class), eq(couponInfo));
         doNothing().when(paymentOutputPort).save(any(), any());
         doNothing().when(orderEventPublisher).publishOrderCreated(any(Order.class), any(Long.class));
 
@@ -137,7 +145,7 @@ class AddOrderInputPortTest {
         // given
         Long memberId = 999L;
         Long storeId = 1L;
-        OrderInputDTO request = mock(OrderInputDTO.class);
+        OrderInputDTO request = new OrderInputDTO();
 
         doThrow(new BusinessException(OrderErrorCode.MEMBER_NOT_FOUND))
                 .when(memberOutputPort).validateMember(memberId);
@@ -155,7 +163,7 @@ class AddOrderInputPortTest {
         // given
         Long memberId = 1L;
         Long storeId = 999L;
-        OrderInputDTO request = mock(OrderInputDTO.class);
+        OrderInputDTO request = new OrderInputDTO();
 
         doNothing().when(memberOutputPort).validateMember(memberId);
         doThrow(new BusinessException(OrderErrorCode.STORE_NOT_FOUND))
