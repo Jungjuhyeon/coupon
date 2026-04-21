@@ -16,6 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Optional;
 
@@ -44,11 +45,12 @@ class AuthInputPortTest {
     @DisplayName("회원 가입 성공")
     void signUp_success() {
         // given
-        MemberInfoDTO request = mock(MemberInfoDTO.class);
-        when(request.getEmail()).thenReturn("test@test.com");
-        when(request.getPassword()).thenReturn("Password1!");
-        when(request.getName()).thenReturn("홍길동");
-        when(request.getPhone()).thenReturn("010-1234-5678");
+        // MemberInfoDTO: private 필드만 있으므로 ReflectionTestUtils로 직접 설정
+        MemberInfoDTO request = new MemberInfoDTO();
+        ReflectionTestUtils.setField(request, "email", "test@test.com");
+        ReflectionTestUtils.setField(request, "password", "Password1!");
+        ReflectionTestUtils.setField(request, "name", "홍길동");
+        ReflectionTestUtils.setField(request, "phone", "010-1234-5678");
 
         Member savedMember = Member.create("test@test.com", "홍길동", "010-1234-5678", "encoded");
         when(memberOutputPort.existsByEmail("test@test.com")).thenReturn(false);
@@ -61,6 +63,8 @@ class AuthInputPortTest {
         // then
         assertThat(result).isNotNull();
         assertThat(result.getEmail()).isEqualTo("test@test.com");
+        assertThat(result.getName()).isEqualTo("홍길동");
+        assertThat(result.getPhone()).isEqualTo("010-1234-5678");
         verify(memberOutputPort).save(any(Member.class));
     }
 
@@ -68,8 +72,8 @@ class AuthInputPortTest {
     @DisplayName("중복 이메일로 회원 가입 실패")
     void signUp_fail_when_email_duplicated() {
         // given
-        MemberInfoDTO request = mock(MemberInfoDTO.class);
-        when(request.getEmail()).thenReturn("dup@test.com");
+        MemberInfoDTO request = new MemberInfoDTO();
+        ReflectionTestUtils.setField(request, "email", "dup@test.com");
         when(memberOutputPort.existsByEmail("dup@test.com")).thenReturn(true);
 
         // when & then
@@ -83,9 +87,10 @@ class AuthInputPortTest {
     @DisplayName("로그인 성공")
     void login_success() {
         // given
-        MemberLoginDTO request = mock(MemberLoginDTO.class);
-        when(request.getEmail()).thenReturn("test@test.com");
-        when(request.getPassword()).thenReturn("Password1!");
+        // MemberLoginDTO: private 필드만 있으므로 ReflectionTestUtils로 직접 설정
+        MemberLoginDTO request = new MemberLoginDTO();
+        ReflectionTestUtils.setField(request, "email", "test@test.com");
+        ReflectionTestUtils.setField(request, "password", "Password1!");
 
         Member member = Member.create("test@test.com", "홍길동", "010-1234-5678", "encoded");
         when(memberOutputPort.findByEmail("test@test.com")).thenReturn(Optional.of(member));
@@ -98,14 +103,15 @@ class AuthInputPortTest {
         // then
         assertThat(result).isNotNull();
         assertThat(result.getAccessToken()).isEqualTo("access-token");
+        assertThat(result.getEmail()).isEqualTo("test@test.com");
     }
 
     @Test
     @DisplayName("존재하지 않는 이메일로 로그인 실패")
     void login_fail_when_email_not_found() {
         // given
-        MemberLoginDTO request = mock(MemberLoginDTO.class);
-        when(request.getEmail()).thenReturn("notfound@test.com");
+        MemberLoginDTO request = new MemberLoginDTO();
+        ReflectionTestUtils.setField(request, "email", "notfound@test.com");
         when(memberOutputPort.findByEmail("notfound@test.com")).thenReturn(Optional.empty());
 
         // when & then
@@ -119,9 +125,9 @@ class AuthInputPortTest {
     @DisplayName("비밀번호 불일치로 로그인 실패")
     void login_fail_when_password_mismatch() {
         // given
-        MemberLoginDTO request = mock(MemberLoginDTO.class);
-        when(request.getEmail()).thenReturn("test@test.com");
-        when(request.getPassword()).thenReturn("wrongPassword");
+        MemberLoginDTO request = new MemberLoginDTO();
+        ReflectionTestUtils.setField(request, "email", "test@test.com");
+        ReflectionTestUtils.setField(request, "password", "wrongPassword");
 
         Member member = Member.create("test@test.com", "홍길동", "010-1234-5678", "encoded");
         when(memberOutputPort.findByEmail("test@test.com")).thenReturn(Optional.of(member));

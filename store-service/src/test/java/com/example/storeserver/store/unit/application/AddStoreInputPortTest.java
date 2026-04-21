@@ -18,6 +18,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Optional;
 
@@ -49,22 +50,27 @@ class AddStoreInputPortTest {
     void create_success() {
         // given
         Long memberId = 1L;
-        StoreInfoDTO request = mock(StoreInfoDTO.class);
-        when(request.getStoreCategoryId()).thenReturn(1L);
-        when(request.getBrandId()).thenReturn(1L);
-        when(request.getName()).thenReturn("테스트 가게");
-        when(request.getPhone()).thenReturn("02-1234-5678");
-        when(request.getAddress()).thenReturn("서울시 강남구");
 
-        StoreCategory mockCategory = mock(StoreCategory.class);
-        Brand mockBrand = mock(Brand.class);
-        Store mockStore = mock(Store.class);
-        when(mockStore.getId()).thenReturn(1L);
+        // StoreInfoDTO: private 필드만 있으므로 ReflectionTestUtils로 직접 설정
+        StoreInfoDTO request = new StoreInfoDTO();
+        ReflectionTestUtils.setField(request, "storeCategoryId", 1L);
+        ReflectionTestUtils.setField(request, "brandId", 1L);
+        ReflectionTestUtils.setField(request, "name", "테스트 가게");
+        ReflectionTestUtils.setField(request, "phone", "02-1234-5678");
+        ReflectionTestUtils.setField(request, "address", "서울시 강남구");
 
-        when(storeCategoryOutputPort.findById(1L)).thenReturn(Optional.of(mockCategory));
-        when(brandOutputPort.findById(1L)).thenReturn(Optional.of(mockBrand));
+        // 도메인 객체 — builder로 실제 객체 생성
+        StoreCategory storeCategory = StoreCategory.builder().name("한식").build();
+        Brand brand = Brand.builder().name("테스트 브랜드").storeCategory(storeCategory).build();
+
+        // Store: factory method + ReflectionTestUtils로 id 설정
+        Store savedStore = Store.create(brand, storeCategory, memberId, "테스트 가게", "02-1234-5678", "서울시 강남구");
+        ReflectionTestUtils.setField(savedStore, "id", 1L);
+
+        when(storeCategoryOutputPort.findById(1L)).thenReturn(Optional.of(storeCategory));
+        when(brandOutputPort.findById(1L)).thenReturn(Optional.of(brand));
         when(memberOutputPort.existsOwner(memberId)).thenReturn(true);
-        when(storeOutputPort.save(any(Store.class))).thenReturn(mockStore);
+        when(storeOutputPort.save(any(Store.class))).thenReturn(savedStore);
 
         // when
         StoreIdOutputDTO result = addStoreInputPort.create(memberId, request);
@@ -80,8 +86,8 @@ class AddStoreInputPortTest {
     void create_fail_when_category_not_found() {
         // given
         Long memberId = 1L;
-        StoreInfoDTO request = mock(StoreInfoDTO.class);
-        when(request.getStoreCategoryId()).thenReturn(999L);
+        StoreInfoDTO request = new StoreInfoDTO();
+        ReflectionTestUtils.setField(request, "storeCategoryId", 999L);
         when(storeCategoryOutputPort.findById(999L)).thenReturn(Optional.empty());
 
         // when & then
@@ -96,12 +102,12 @@ class AddStoreInputPortTest {
     void create_fail_when_brand_not_found() {
         // given
         Long memberId = 1L;
-        StoreInfoDTO request = mock(StoreInfoDTO.class);
-        when(request.getStoreCategoryId()).thenReturn(1L);
-        when(request.getBrandId()).thenReturn(999L);
+        StoreInfoDTO request = new StoreInfoDTO();
+        ReflectionTestUtils.setField(request, "storeCategoryId", 1L);
+        ReflectionTestUtils.setField(request, "brandId", 999L);
 
-        StoreCategory mockCategory = mock(StoreCategory.class);
-        when(storeCategoryOutputPort.findById(1L)).thenReturn(Optional.of(mockCategory));
+        StoreCategory storeCategory = StoreCategory.builder().name("한식").build();
+        when(storeCategoryOutputPort.findById(1L)).thenReturn(Optional.of(storeCategory));
         when(brandOutputPort.findById(999L)).thenReturn(Optional.empty());
 
         // when & then
@@ -116,14 +122,14 @@ class AddStoreInputPortTest {
     void create_fail_when_owner_not_found() {
         // given
         Long memberId = 1L;
-        StoreInfoDTO request = mock(StoreInfoDTO.class);
-        when(request.getStoreCategoryId()).thenReturn(1L);
-        when(request.getBrandId()).thenReturn(1L);
+        StoreInfoDTO request = new StoreInfoDTO();
+        ReflectionTestUtils.setField(request, "storeCategoryId", 1L);
+        ReflectionTestUtils.setField(request, "brandId", 1L);
 
-        StoreCategory mockCategory = mock(StoreCategory.class);
-        Brand mockBrand = mock(Brand.class);
-        when(storeCategoryOutputPort.findById(1L)).thenReturn(Optional.of(mockCategory));
-        when(brandOutputPort.findById(1L)).thenReturn(Optional.of(mockBrand));
+        StoreCategory storeCategory = StoreCategory.builder().name("한식").build();
+        Brand brand = Brand.builder().name("테스트 브랜드").storeCategory(storeCategory).build();
+        when(storeCategoryOutputPort.findById(1L)).thenReturn(Optional.of(storeCategory));
+        when(brandOutputPort.findById(1L)).thenReturn(Optional.of(brand));
         when(memberOutputPort.existsOwner(memberId)).thenReturn(false);
 
         // when & then
